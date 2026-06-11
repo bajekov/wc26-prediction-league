@@ -575,10 +575,15 @@ async function loadState(){
     setSave("Offline","err");
   }
 }
+const LS_KEY = "hh-pending";
+function persistPending(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(pendingPreds)); }catch(e){}
+}
 function queueSave(){
+  persistPending();
   setSave("Saving\u2026","busy");
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(flushPreds, 700);
+  saveTimer = setTimeout(flushPreds, 300);
 }
 async function flushPreds(){
   const updates = Object.values(pendingPreds);
@@ -587,11 +592,13 @@ async function flushPreds(){
   try{
     const res = await fetch("/api/league",{ method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ preds: updates, pw: adminPw }) });
+      body: JSON.stringify({ preds: updates, pw: adminPw }), keepalive:true });
     if(!res.ok) throw 0;
+    persistPending();
     setSave("Saved");
   }catch(e){
     for(const u of updates) pendingPreds[u.id+u.pk] = u;   // re-queue and retry
+    persistPending();
     setSave("Save failed \u2014 retrying","err");
     setTimeout(flushPreds, 4000);
   }
@@ -820,10 +827,33 @@ setInterval(async ()=>{
   renderBoard();
 }, 60000);
 
+function flushOnExit(){
+  const updates = Object.values(pendingPreds);
+  if(!updates.length) return;
+  pendingPreds = {};
+  const body = JSON.stringify({ preds: updates, pw: adminPw });
+  if(navigator.sendBeacon){
+    navigator.sendBeacon("/api/league", new Blob([body], {type:"application/json"}));
+  }else{
+    fetch("/api/league",{ method:"POST", headers:{"Content-Type":"application/json"}, body:body, keepalive:true });
+  }
+}
+window.addEventListener("pagehide", flushOnExit);
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") flushOnExit(); });
+
 /* ---------------- boot ---------------- */
 (async function(){
   await loadState();
+  try{
+    const leftovers = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    for(const k in leftovers){
+      const u = leftovers[k];
+      (state.p[u.id] ||= {})[u.pk] = u.v;
+      pendingPreds[k] = u;
+    }
+  }catch(e){}
   buildUI();
+  if(Object.keys(pendingPreds).length) flushPreds();   // push restored entries to the server
 })();
 </script>
 </body>
