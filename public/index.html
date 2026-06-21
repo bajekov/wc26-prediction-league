@@ -817,7 +817,6 @@ async function flushPreds(){
       keepalive:true
     });
     if(!res.ok) throw new Error('Save failed');
-    // Remove only items that were sent and haven't been updated since
     for(const key of sentKeys) {
       const pending = pendingPreds[key];
       const sentItem = itemsToSend.find(u => u.id+u.pk === key);
@@ -838,7 +837,6 @@ async function saveResult(id){
   const entry = pendingRes[id];
   if(!entry) return;
   const sentVal = entry.v;
-  const sentStr = JSON.stringify(sentVal);
   setSave("Saving…","busy");
   try{
     const res = await fetch("/api/league",{
@@ -850,23 +848,18 @@ async function saveResult(id){
     if(res.status===401){ setSave("Not authorised","err"); return; }
     if(!res.ok) throw new Error('Save failed');
 
-    // Immediately fetch the fresh state from server to confirm
     const fresh = await fetch("/api/league");
     if(!fresh.ok) throw new Error('Fresh fetch failed');
     const freshData = await fresh.json();
-    // Verify that the server now has our value
     const serverR = freshData.r && freshData.r[id];
     if(serverR && serverR[0]===sentVal[0] && serverR[1]===sentVal[1]) {
-      // Confirmed – clear pending and update state
       delete pendingRes[id];
       state.r[id] = serverR;
-      // Also merge any other server updates, but keep our pending preds
       for(const mid in freshData.r) {
         if(!pendingRes[mid]) {
           state.r[mid] = freshData.r[mid];
         }
       }
-      // Merge predictions (only those not pending)
       for(const pid in freshData.p) {
         if(!pendingPreds[pid]) {
           state.p[pid] = freshData.p[pid];
@@ -875,7 +868,6 @@ async function saveResult(id){
       persistPendingRes();
       setSave("Saved");
     } else {
-      // Server doesn't match yet – keep pending and retry later
       setSave("Server pending…","busy");
       setTimeout(() => saveResult(id), 2000);
     }
@@ -1103,31 +1095,48 @@ async function tryUnlock(){
 document.getElementById("pwGo").addEventListener("click", tryUnlock);
 pwBox.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
 
-/* -------- periodic sync -------- */
+/* -------- periodic sync with smart merge for both results and predictions -------- */
 async function syncServer(){
   try{
     const res = await fetch("/api/league");
     if(!res.ok) throw 0;
     const s = await res.json();
-    // Only update matches that do NOT have pending changes
+    
+    // Merge server results – never overwrite a complete local result with an incomplete server one
     for(const id in s.r) {
       if(!pendingRes[id]) {
-        state.r[id] = s.r[id];
+        const local = state.r[id] || ["",""];
+        const server = s.r[id] || ["",""];
+        const localComplete = local[0] !== "" && local[1] !== "";
+        const serverComplete = server[0] !== "" && server[1] !== "";
+        if (serverComplete || !localComplete) {
+          state.r[id] = server;
+        }
       }
     }
+    // Merge predictions – same logic
     for(const pid in s.p) {
       if(!pendingPreds[pid]) {
-        const [id, pk] = [parseInt(pid.slice(0,-1)), pid.slice(-1)];
-        if(!state.p[id]) state.p[id] = {};
-        state.p[id][pk] = s.p[pid];
+        const serverPred = s.p[pid] || ["",""];
+        // Find local prediction for this player/match
+        const id = parseInt(pid.slice(0,-1));
+        const pk = pid.slice(-1);
+        const localPred = (state.p[id] && state.p[id][pk]) || ["",""];
+        const localComplete = localPred[0] !== "" && localPred[1] !== "";
+        const serverComplete = serverPred[0] !== "" && serverPred[1] !== "";
+        if (serverComplete || !localComplete) {
+          if(!state.p[id]) state.p[id] = {};
+          state.p[id][pk] = serverPred;
+        }
       }
     }
-    // Also refresh the UI
+    // Refresh UI
     for(const m of MATCHES) refreshMatch(m.id);
     renderBoard();
   }catch(e){}
 }
 
+// Run sync every 60 seconds
 setInterval(syncServer, 60000);
 
 /* -------- exit flush -------- */
@@ -1153,7 +1162,6 @@ document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState=
 
 /* -------- boot -------- */
 (async function(){
-  // First load any pending from localStorage
   try{
     const leftovers = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
     for(const k in leftovers){
@@ -1171,10 +1179,9 @@ document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState=
     }
   }catch(e){}
 
-  await loadState(); // merges server + pending
+  await loadState();
   buildUI();
 
-  // Retry any pending saves
   if(Object.keys(pendingPreds).length) flushPreds();
   for(const id in pendingRes) saveResult(+id);
 })();
