@@ -837,6 +837,7 @@ async function saveResult(id){
   const entry = pendingRes[id];
   if(!entry) return;
   const sentVal = entry.v;
+  const sentTs  = entry.ts;          // remember exactly which edit we're sending
   setSave("Saving…","busy");
   try{
     const res = await fetch("/api/league",{
@@ -848,29 +849,14 @@ async function saveResult(id){
     if(res.status===401){ setSave("Not authorised","err"); return; }
     if(!res.ok) throw new Error('Save failed');
 
-    const fresh = await fetch("/api/league");
-    if(!fresh.ok) throw new Error('Fresh fetch failed');
-    const freshData = await fresh.json();
-    const serverR = freshData.r && freshData.r[id];
-    if(serverR && serverR[0]===sentVal[0] && serverR[1]===sentVal[1]) {
+    // Only clear the pending entry if nothing newer was typed while this save
+    // was in flight. Without this guard a stale save (home in, away not yet)
+    // wipes the newer complete value and blanks the away score.
+    if(pendingRes[id] && pendingRes[id].ts === sentTs){
       delete pendingRes[id];
-      state.r[id] = serverR;
-      for(const mid in freshData.r) {
-        if(!pendingRes[mid]) {
-          state.r[mid] = freshData.r[mid];
-        }
-      }
-      for(const pid in freshData.p) {
-        if(!pendingPreds[pid]) {
-          state.p[pid] = freshData.p[pid];
-        }
-      }
-      persistPendingRes();
-      setSave("Saved");
-    } else {
-      setSave("Server pending…","busy");
-      setTimeout(() => saveResult(id), 2000);
     }
+    persistPendingRes();
+    setSave("Saved");
   }catch(e){
     persistPendingRes();
     setSave("Save failed – retrying","err");
@@ -1114,17 +1100,19 @@ async function syncServer(){
         }
       }
     }
-    // Merge predictions – same logic
-    for(const pid in s.p) {
-      if(!pendingPreds[pid]) {
-        const serverPred = s.p[pid] || ["",""];
-        // Find local prediction for this player/match
-        const id = parseInt(pid.slice(0,-1));
-        const pk = pid.slice(-1);
-        const localPred = (state.p[id] && state.p[id][pk]) || ["",""];
-        const localComplete = localPred[0] !== "" && localPred[1] !== "";
+    // Merge predictions. Server shape is nested: s.p[matchId][playerKey] = [home, away].
+    // (The old loop treated the key as a flat "1A" string, which never matched the real
+    //  data — so predictions never actually synced between devices.)
+    for(const id in s.p){
+      const serverPreds = s.p[id] || {};
+      for(const pk in serverPreds){
+        const key = id + pk;
+        if(pendingPreds[key]) continue;             // unsent local edit always wins
+        const serverPred = serverPreds[pk] || ["",""];
+        const localPred  = (state.p[id] && state.p[id][pk]) || ["",""];
+        const localComplete  = localPred[0]  !== "" && localPred[1]  !== "";
         const serverComplete = serverPred[0] !== "" && serverPred[1] !== "";
-        if (serverComplete || !localComplete) {
+        if(serverComplete || !localComplete){       // never downgrade complete → incomplete
           if(!state.p[id]) state.p[id] = {};
           state.p[id][pk] = serverPred;
         }
