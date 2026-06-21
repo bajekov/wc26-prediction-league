@@ -6,7 +6,7 @@ const ok2digit = (v) => /^\d{0,2}$/.test(String(v ?? ""));
 const resultDone = (r) => r && r[0] !== "" && r[1] !== "" && r[0] != null && r[1] != null;
 
 export default async (req) => {
-  const store = getStore("holme-hale-league");
+  const store = getStore({ name: "holme-hale-league", consistency: "strong" });
 
   if (req.method === "GET") {
     const data = (await store.get("state", { type: "json" })) || { p: {}, r: {} };
