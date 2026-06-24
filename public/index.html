@@ -337,7 +337,23 @@ const MATCHES = [
  {id:85,r:4,t1:"1B",t2:"3rd E/F/G/I/J",d:"Friday 3 July",tm:"4:00am",v:"BC Place, Vancouver"},
  {id:88,r:4,t1:"2D",t2:"2G",d:"Friday 3 July",tm:"7:00pm",v:"AT&T Stadium, Arlington"},
  {id:86,r:4,t1:"1J",t2:"2H",d:"Friday 3 July",tm:"11:00pm",v:"Hard Rock Stadium, Miami"},
- {id:87,r:4,t1:"1K",t2:"3rd D/E/I/J/L",d:"Saturday 4 July",tm:"2:30am",v:"Arrowhead Stadium, Kansas City"}
+ {id:87,r:4,t1:"1K",t2:"3rd D/E/I/J/L",d:"Saturday 4 July",tm:"2:30am",v:"Arrowhead Stadium, Kansas City"},
+ {id:90,r:5,t1:"W73",t2:"W75",d:"Saturday 4 July",tm:"6:00pm",v:"NRG Stadium, Houston"},
+ {id:89,r:5,t1:"W74",t2:"W77",d:"Saturday 4 July",tm:"10:00pm",v:"Lincoln Financial Field, Philadelphia"},
+ {id:91,r:5,t1:"W76",t2:"W78",d:"Sunday 5 July",tm:"9:00pm",v:"MetLife Stadium, New Jersey"},
+ {id:92,r:5,t1:"W79",t2:"W80",d:"Monday 6 July",tm:"1:00am",v:"Estadio Azteca, Mexico City"},
+ {id:93,r:5,t1:"W83",t2:"W84",d:"Monday 6 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
+ {id:94,r:5,t1:"W81",t2:"W82",d:"Tuesday 7 July",tm:"1:00am",v:"Lumen Field, Seattle"},
+ {id:95,r:5,t1:"W86",t2:"W88",d:"Tuesday 7 July",tm:"5:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
+ {id:96,r:5,t1:"W85",t2:"W87",d:"Tuesday 7 July",tm:"9:00pm",v:"BC Place, Vancouver"},
+ {id:97,r:6,t1:"W89",t2:"W90",d:"Thursday 9 July",tm:"9:00pm",v:"Gillette Stadium, Foxborough"},
+ {id:98,r:6,t1:"W93",t2:"W94",d:"Friday 10 July",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
+ {id:99,r:6,t1:"W91",t2:"W92",d:"Saturday 11 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
+ {id:100,r:6,t1:"W95",t2:"W96",d:"Sunday 12 July",tm:"2:00am",v:"Arrowhead Stadium, Kansas City"},
+ {id:101,r:7,t1:"W97",t2:"W98",d:"Tuesday 14 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
+ {id:102,r:7,t1:"W99",t2:"W100",d:"Wednesday 15 July",tm:"8:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
+ {id:103,r:8,t1:"L101",t2:"L102",d:"Saturday 18 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
+ {id:104,r:8,t1:"W101",t2:"W102",d:"Sunday 19 July",tm:"8:00pm",v:"MetLife Stadium, New Jersey"}
 ];
 
 function fg(a,b){
@@ -1212,7 +1228,7 @@ function matchCard(m){
   }
   return '<div class="match" id="m'+m.id+'">'
    + '<div class="m-head" onclick="toggleMatch('+m.id+')">'
-   +   '<div class="m-top"><span class="m-group">'+(m.g?('GRP '+m.g):'R32')+'</span>'
+   +   '<div class="m-top"><span class="m-group">'+(m.g ? 'GRP '+m.g : ({4:'R32',5:'R16',6:'QF',7:'SF'}[m.r] || (m.id===104?'FINAL':'3RD')))+'</span>'
    +   '<span class="m-meta">'+m.d+' · '+m.tm+' BST · '+clean(m.v)+'</span>'
    +   '<span class="m-lock" id="lock'+m.id+'"></span></div>'
    +   '<div class="m-score">'
@@ -1235,10 +1251,10 @@ function toggleSec(r){ document.getElementById("sec"+r).classList.toggle("closed
 function buildUI(){
   const wrap = document.getElementById("rounds");
   let html = "";
-  for(const r of [1,2,3,4]){
+  for(const r of [1,2,3,4,5,6,7,8]){
     const ms = MATCHES.filter(m=>m.r===r);
     html += '<section class="closed" id="sec'+r+'">'
-         +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games",4:"Round of 32"}[r]+'</h2>'
+         +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games",4:"Round of 32",5:"Round of 16",6:"Quarter-finals",7:"Semi-finals",8:"Third-Place Play-off & Final"}[r]+'</h2>'
          +  '<span class="count">'+ms.length+' matches</span><span class="chev">&#9662;</span></div>'
          +  '<div class="sec-body">';
     let lastDate = "";
