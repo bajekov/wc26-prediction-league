@@ -321,7 +321,23 @@ const MATCHES = [
  {id:69,r:3,g:"K",t1:"Colombia",t2:"Portugal",d:"Sunday 28 June",tm:"12:30am",v:"Hard Rock Stadium, Miami"},
  {id:70,r:3,g:"K",t1:"DR Congo",t2:"Uzbekistan",d:"Sunday 28 June",tm:"12:30am",v:"Mercedes-Benz Stadium, Atlanta"},
  {id:71,r:3,g:"J",t1:"Algeria",t2:"Austria",d:"Sunday 28 June",tm:"3:00am",v:"Arrowhead Stadium, Kansas City"},
- {id:72,r:3,g:"J",t1:"Jordan",t2:"Argentina",d:"Sunday 28 June",tm:"3:00am",v:"AT&T Stadium, Arlington"}
+ {id:72,r:3,g:"J",t1:"Jordan",t2:"Argentina",d:"Sunday 28 June",tm:"3:00am",v:"AT&T Stadium, Arlington"},
+ {id:73,r:4,t1:"2A",t2:"2B",d:"Sunday 28 June",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
+ {id:76,r:4,t1:"1C",t2:"2F",d:"Monday 29 June",tm:"6:00pm",v:"NRG Stadium, Houston"},
+ {id:74,r:4,t1:"1E",t2:"3rd A/B/C/D/F",d:"Monday 29 June",tm:"9:30pm",v:"Gillette Stadium, Foxborough"},
+ {id:75,r:4,t1:"1F",t2:"2C",d:"Tuesday 30 June",tm:"2:00am",v:"Estadio BBVA, Monterrey"},
+ {id:78,r:4,t1:"2E",t2:"2I",d:"Tuesday 30 June",tm:"6:00pm",v:"AT&T Stadium, Arlington"},
+ {id:77,r:4,t1:"1I",t2:"3rd C/D/F/G/H",d:"Tuesday 30 June",tm:"10:00pm",v:"MetLife Stadium, New Jersey"},
+ {id:79,r:4,t1:"1A",t2:"3rd C/E/F/H/I",d:"Wednesday 1 July",tm:"2:00am",v:"Estadio Azteca, Mexico City"},
+ {id:80,r:4,t1:"1L",t2:"3rd E/H/I/J/K",d:"Wednesday 1 July",tm:"5:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
+ {id:82,r:4,t1:"1G",t2:"3rd A/E/H/I/J",d:"Wednesday 1 July",tm:"9:00pm",v:"Lumen Field, Seattle"},
+ {id:81,r:4,t1:"1D",t2:"3rd B/E/F/I/J",d:"Thursday 2 July",tm:"1:00am",v:"Levi's Stadium, Santa Clara"},
+ {id:84,r:4,t1:"1H",t2:"2J",d:"Thursday 2 July",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
+ {id:83,r:4,t1:"2K",t2:"2L",d:"Friday 3 July",tm:"12:00am",v:"BMO Field, Toronto"},
+ {id:85,r:4,t1:"1B",t2:"3rd E/F/G/I/J",d:"Friday 3 July",tm:"4:00am",v:"BC Place, Vancouver"},
+ {id:88,r:4,t1:"2D",t2:"2G",d:"Friday 3 July",tm:"7:00pm",v:"AT&T Stadium, Arlington"},
+ {id:86,r:4,t1:"1J",t2:"2H",d:"Friday 3 July",tm:"11:00pm",v:"Hard Rock Stadium, Miami"},
+ {id:87,r:4,t1:"1K",t2:"3rd D/E/I/J/L",d:"Saturday 4 July",tm:"2:30am",v:"Arrowhead Stadium, Kansas City"}
 ];
 
 function fg(a,b){
@@ -1196,7 +1212,7 @@ function matchCard(m){
   }
   return '<div class="match" id="m'+m.id+'">'
    + '<div class="m-head" onclick="toggleMatch('+m.id+')">'
-   +   '<div class="m-top"><span class="m-group">GRP '+m.g+'</span>'
+   +   '<div class="m-top"><span class="m-group">'+(m.g?('GRP '+m.g):'R32')+'</span>'
    +   '<span class="m-meta">'+m.d+' · '+m.tm+' BST · '+clean(m.v)+'</span>'
    +   '<span class="m-lock" id="lock'+m.id+'"></span></div>'
    +   '<div class="m-score">'
@@ -1219,10 +1235,10 @@ function toggleSec(r){ document.getElementById("sec"+r).classList.toggle("closed
 function buildUI(){
   const wrap = document.getElementById("rounds");
   let html = "";
-  for(const r of [1,2,3]){
+  for(const r of [1,2,3,4]){
     const ms = MATCHES.filter(m=>m.r===r);
     html += '<section class="closed" id="sec'+r+'">'
-         +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games"}[r]+'</h2>'
+         +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games",4:"Round of 32"}[r]+'</h2>'
          +  '<span class="count">'+ms.length+' matches</span><span class="chev">&#9662;</span></div>'
          +  '<div class="sec-body">';
     let lastDate = "";
