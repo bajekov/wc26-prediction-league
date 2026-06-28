@@ -1476,8 +1476,12 @@ async function syncServer(){
   }catch(e){}
 }
 
-// Run sync every 60 seconds
-setInterval(syncServer, 60000);
+// Sync when the page becomes visible again (e.g., after switching apps)
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible") {
+    syncServer();
+  }
+});
 
 /* -------- exit flush -------- */
 function beacon(body){
