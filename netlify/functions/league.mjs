@@ -42,7 +42,10 @@ export default async (req) => {
           if (!PLAYERS.includes(u.pk)) continue;
           if (!Array.isArray(u.v) || !ok2digit(u.v[0]) || !ok2digit(u.v[1])) continue;
           if (resultDone(data.r[u.id]) && body.pw !== PW) continue;   // locked unless admin password supplied
-          (data.p[u.id] ||= {})[u.pk] = [String(u.v[0]), String(u.v[1])];
+          const adv = (u.v[2] === "1" || u.v[2] === "2") ? u.v[2] : "";
+          (data.p[u.id] ||= {})[u.pk] = adv
+            ? [String(u.v[0]), String(u.v[1]), adv]
+            : [String(u.v[0]), String(u.v[1])];
         }
       }
 
@@ -50,7 +53,10 @@ export default async (req) => {
       if (body.result) {
         const { id, v } = body.result;
         if (Array.isArray(v) && ok2digit(v[0]) && ok2digit(v[1])) {
-          data.r[id] = [String(v[0]), String(v[1])];
+          const adv = (v[2] === "1" || v[2] === "2") ? v[2] : "";
+          data.r[id] = adv
+            ? [String(v[0]), String(v[1]), adv]
+            : [String(v[0]), String(v[1])];
         }
       }
 
