@@ -135,6 +135,16 @@
   }
   .pred-box:focus,.res-box:focus{outline:2px solid var(--gold);outline-offset:1px;}
   .pred-box:disabled{background:var(--paper);color:var(--muted);}
+  .adv-line{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin:-2px 0 6px;padding-left:2px;flex-wrap:wrap;}
+  .adv-tag{font-size:.62rem;font-weight:800;letter-spacing:.12em;color:var(--muted);}
+  .adv-pill{border:1.5px solid var(--line);background:#fff;color:var(--ink);font-weight:800;font-size:.7rem;letter-spacing:.06em;padding:3px 12px;border-radius:999px;cursor:pointer;font-family:inherit;}
+  .adv-pill.sel{background:var(--pitch);border-color:var(--pitch);color:#fff;}
+  .adv-pill:disabled{opacity:.55;cursor:default;}
+  .adv-pill.sel:disabled{opacity:1;}
+  .adv-pill.sel.hit{background:var(--ok);border-color:var(--ok);}
+  .adv-pill.sel.miss{background:var(--red);border-color:var(--red);}
+  .thru-note{margin-top:6px;font-size:.72rem;font-weight:800;color:var(--pitch);letter-spacing:.04em;}
+  .ko-note{margin:14px 0 2px;font-size:.76rem;color:var(--muted);border-left:3px solid var(--gold);padding:6px 10px;background:var(--card);border-radius:0 4px 4px 0;}
   .m-body{display:none;border-top:1px solid var(--line);background:#FBF8EE;padding:14px 16px;font-size:.88rem;}
   .match.open .m-body{display:block;}
   .m-body h4{
@@ -230,12 +240,12 @@
     <div class="board-scroll">
     <table>
       <thead>
-        <tr><th>#</th><th>Player</th><th class="num">Exact</th><th class="num">Outcome</th><th class="num hide-sm">Played</th><th class="num">Points</th></tr>
+        <tr><th>#</th><th>Player</th><th class="num">Exact</th><th class="num">Outcome</th><th class="num">Thru</th><th class="num hide-sm">Played</th><th class="num">Points</th></tr>
       </thead>
       <tbody id="boardBody"></tbody>
     </table>
     </div>
-    <div class="scoring-note">Exact score = 5 pts · correct result (win/draw) = 2 pts. Updates as soon as a final score goes in; predictions lock once a result is saved.</div>
+    <div class="scoring-note">All games: exact 90-minute score = 5 pts · correct 90-minute result (win/draw) = 2 pts. Knockouts: also pick who goes through = +3 pts, however the tie is settled — extra time and penalties included. Predictions lock at kick-off; the table updates as results go in.</div>
   </div>
 
   <div id="rounds"></div>
@@ -338,14 +348,14 @@ const MATCHES = [
  {id:88,r:4,t1:"Australia",t2:"Egypt",d:"Friday 3 July",tm:"7:00pm",v:"AT&T Stadium, Arlington"},
  {id:86,r:4,t1:"Argentina",t2:"Cape Verde",d:"Friday 3 July",tm:"11:00pm",v:"Hard Rock Stadium, Miami"},
  {id:87,r:4,t1:"Colombia",t2:"Ghana",d:"Saturday 4 July",tm:"2:30am",v:"Arrowhead Stadium, Kansas City"},
- {id:90,r:5,t1:"W73",t2:"W75",d:"Saturday 4 July",tm:"6:00pm",v:"NRG Stadium, Houston"},
- {id:89,r:5,t1:"W74",t2:"W77",d:"Saturday 4 July",tm:"10:00pm",v:"Lincoln Financial Field, Philadelphia"},
- {id:91,r:5,t1:"W76",t2:"W78",d:"Sunday 5 July",tm:"9:00pm",v:"MetLife Stadium, New Jersey"},
- {id:92,r:5,t1:"W79",t2:"W80",d:"Monday 6 July",tm:"1:00am",v:"Estadio Azteca, Mexico City"},
- {id:93,r:5,t1:"W83",t2:"W84",d:"Monday 6 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
- {id:94,r:5,t1:"W81",t2:"W82",d:"Tuesday 7 July",tm:"1:00am",v:"Lumen Field, Seattle"},
- {id:95,r:5,t1:"W86",t2:"W88",d:"Tuesday 7 July",tm:"5:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
- {id:96,r:5,t1:"W85",t2:"W87",d:"Tuesday 7 July",tm:"9:00pm",v:"BC Place, Vancouver"},
+ {id:90,r:5,t1:"Canada",t2:"Morocco",d:"Saturday 4 July",tm:"6:00pm",v:"NRG Stadium, Houston"},
+ {id:89,r:5,t1:"Paraguay",t2:"France",d:"Saturday 4 July",tm:"10:00pm",v:"Lincoln Financial Field, Philadelphia"},
+ {id:91,r:5,t1:"Brazil",t2:"Norway",d:"Sunday 5 July",tm:"9:00pm",v:"MetLife Stadium, New Jersey"},
+ {id:92,r:5,t1:"Mexico",t2:"England",d:"Monday 6 July",tm:"1:00am",v:"Estadio Azteca, Mexico City"},
+ {id:93,r:5,t1:"Portugal",t2:"Spain",d:"Monday 6 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
+ {id:94,r:5,t1:"USA",t2:"Belgium",d:"Tuesday 7 July",tm:"1:00am",v:"Lumen Field, Seattle"},
+ {id:95,r:5,t1:"Argentina",t2:"Egypt",d:"Tuesday 7 July",tm:"5:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
+ {id:96,r:5,t1:"Switzerland",t2:"Colombia",d:"Tuesday 7 July",tm:"9:00pm",v:"BC Place, Vancouver"},
  {id:97,r:6,t1:"W89",t2:"W90",d:"Thursday 9 July",tm:"9:00pm",v:"Gillette Stadium, Foxborough"},
  {id:98,r:6,t1:"W93",t2:"W94",d:"Friday 10 July",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
  {id:99,r:6,t1:"W91",t2:"W92",d:"Saturday 11 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
@@ -1110,6 +1120,23 @@ function pointsFor(pred,res){
   return 0;
 }
 
+/* -------- knockout advancement helpers -------- */
+const TLA = {"Canada":"CAN","Morocco":"MAR","Paraguay":"PAR","France":"FRA","Brazil":"BRA","Norway":"NOR","Mexico":"MEX","England":"ENG","Portugal":"POR","Spain":"ESP","USA":"USA","Belgium":"BEL","Argentina":"ARG","Egypt":"EGY","Switzerland":"SUI","Colombia":"COL"};
+function tla(n){ return TLA[n] || n.slice(0,3).toUpperCase(); }
+function isKO(m){ return m.r>=5; }
+function advancerOf(res){
+  if(!res || res[0]==="" || res[1]==="" || res[0]==null || res[1]==null) return "";
+  const rh=+res[0], ra=+res[1];
+  if(rh>ra) return "1";
+  if(rh<ra) return "2";
+  return res[2] || "";
+}
+function advBonus(m,pred,res){
+  if(!m || !isKO(m)) return 0;
+  const adv = advancerOf(res);
+  return (adv && pred && (pred[2]||"")===adv) ? 3 : 0;
+}
+
 /* -------- persistence helpers -------- */
 const LS_KEY = "hh-pending";
 const LS_KEY_R = "hh-pending-res";
@@ -1227,7 +1254,10 @@ function onPred(id, pk){
   activeInputs.add("p"+id+pk+"h");
   activeInputs.add("p"+id+pk+"a");
   if(!state.p[id]) state.p[id] = {};
+  const prev = state.p[id][pk] || [];
+  const mm = MATCHES.find(x=>x.id===id);
   const val = [h.value, a.value];
+  if(mm && isKO(mm)) val.push(prev[2]||"");
   state.p[id][pk] = val;
   const key = id+pk;
   pendingPreds[key] = { id, pk, v: val, ts: Date.now() };
@@ -1245,7 +1275,10 @@ function onRes(id){
   digitsOnly(h); digitsOnly(a);
   activeInputs.add("r"+id+"h");
   activeInputs.add("r"+id+"a");
+  const prevR = state.r[id] || [];
+  const mm = MATCHES.find(x=>x.id===id);
   const val = [h.value, a.value];
+  if(mm && isKO(mm)) val.push(prevR[2]||"");
   state.r[id] = val;
   pendingRes[id] = { id, v: val, ts: Date.now() };
   persistPendingRes();
@@ -1258,6 +1291,32 @@ function onRes(id){
     activeInputs.delete("r"+id+"h");
     activeInputs.delete("r"+id+"a");
   }, 500);
+}
+
+function onAdv(id, pk, side){
+  const m = MATCHES.find(x=>x.id===id);
+  if(!m || !isKO(m)) return;
+  if(!state.p[id]) state.p[id] = {};
+  const prev = state.p[id][pk] || ["",""];
+  const val = [prev[0]||"", prev[1]||"", (prev[2]||"")===side ? "" : side];
+  state.p[id][pk] = val;
+  pendingPreds[id+pk] = { id, pk, v: val, ts: Date.now() };
+  persistPending();
+  refreshMatch(id);
+  queueSave();
+}
+
+function onResAdv(id, side){
+  const prev = state.r[id] || ["",""];
+  const val = [prev[0]||"", prev[1]||"", (prev[2]||"")===side ? "" : side];
+  state.r[id] = val;
+  pendingRes[id] = { id, v: val, ts: Date.now() };
+  persistPendingRes();
+  refreshMatch(id);
+  renderBoard();
+  setSave("Saving…","busy");
+  clearTimeout(resTimers[id]);
+  resTimers[id] = setTimeout(()=>saveResult(id), 300);
 }
 
 /* -------- rendering -------- */
@@ -1315,30 +1374,76 @@ function refreshMatch(id){
     if(ptsEl){
       if(done){
         const pts = pointsFor(pr, state.r[id]);
-        if(pts===null){ ptsEl.textContent = "no entry"; ptsEl.className = "p-pts s0"; }
-        else { ptsEl.textContent = "+"+pts; ptsEl.className = "p-pts s"+pts; }
+        const bonus = advBonus(m, pr, state.r[id]);
+        if(pts===null && bonus===0){ ptsEl.textContent = "no entry"; ptsEl.className = "p-pts s0"; }
+        else {
+          const tot = (pts||0) + bonus;
+          ptsEl.textContent = "+"+tot;
+          ptsEl.className = "p-pts s"+(pts===5 ? 5 : (pts===2 || bonus>0 ? 2 : 0));
+        }
       } else { ptsEl.textContent = ""; }
+    }
+    if(isKO(m)){
+      const advKnown = advancerOf(state.r[id]||["",""]);
+      const pick = pr[2]||"";
+      for(const s of ["1","2"]){
+        const b = document.getElementById("adv"+id+p.key+s);
+        if(!b) continue;
+        b.disabled = lockPreds;
+        let cls = "adv-pill";
+        if(pick===s){
+          cls += " sel";
+          if(done && advKnown) cls += (advKnown===pick ? " hit" : " miss");
+        }
+        b.className = cls;
+      }
+    }
+  }
+
+  if(isKO(m)){
+    const r2 = state.r[id]||["",""];
+    const bothIn = r2[0]!=="" && r2[1]!=="" && r2[0]!=null && r2[1]!=null;
+    const draw = bothIn && +r2[0]===+r2[1];
+    const radv = document.getElementById("radv"+id);
+    if(radv){
+      radv.style.display = (adminMode && draw) ? "flex" : "none";
+      for(const s of ["1","2"]){
+        const b = document.getElementById("radv"+id+s);
+        if(b) b.className = "adv-pill" + ((r2[2]||"")===s ? " sel" : "");
+      }
+    }
+    const tn = document.getElementById("thru"+id);
+    if(tn){
+      const adv = advancerOf(r2);
+      if(done && draw && adv){
+        tn.textContent = "→ " + (adv==="1" ? m.t1 : m.t2) + " go through (extra time / penalties)";
+        tn.style.display = "block";
+      } else tn.style.display = "none";
     }
   }
 }
 
 function renderBoard(){
   const rows = PLAYERS.map(p=>{
-    let exact=0, outc=0, played=0, total=0;
+    let exact=0, outc=0, thru=0, played=0, total=0;
     for(const m of MATCHES){
       if(!resultEntered(m.id)) continue;
-      const pts = pointsFor((state.p[m.id]||{})[p.key], state.r[m.id]);
-      if(pts===null) continue;
+      const pr = (state.p[m.id]||{})[p.key];
+      const pts = pointsFor(pr, state.r[m.id]);
+      const bonus = advBonus(m, pr, state.r[m.id]);
+      if(pts===null && bonus===0) continue;
       played++;
       if(pts===5) exact++;
       else if(pts===2) outc++;
-      total += pts;
+      if(bonus>0) thru++;
+      total += (pts||0) + bonus;
     }
-    return {name:p.name, exact, outc, played, total};
+    return {name:p.name, exact, outc, thru, played, total};
   }).sort((x,y)=> y.total-x.total || y.exact-x.exact);
   document.getElementById("boardBody").innerHTML = rows.map((r,i)=>
     '<tr><td class="pos">'+(i+1)+'</td><td class="pname">'+r.name+'</td>'
    +'<td class="num">'+r.exact+'</td><td class="num">'+r.outc+'</td>'
+   +'<td class="num">'+r.thru+'</td>'
    +'<td class="num hide-sm">'+r.played+'</td><td class="num ptotal">'+r.total+'</td></tr>'
   ).join("");
 }
@@ -1353,6 +1458,13 @@ function matchCard(m){
     + '<div class="vs">–</div>'
     + '<input class="pred-box" id="p'+m.id+p.key+'a" maxlength="2" inputmode="numeric" placeholder="–" onclick="event.stopPropagation()" oninput="onPred('+m.id+',\''+p.key+'\')">'
     + '<div class="p-pts" id="pts'+m.id+p.key+'"></div>';
+    if(isKO(m)){
+      predRows +=
+        '<div class="adv-line"><span class="adv-tag">'+(m.r===8 ? 'WINS:' : 'THROUGH:')+'</span>'
+      + '<button class="adv-pill" id="adv'+m.id+p.key+'1" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'1\')">'+tla(m.t1)+'</button>'
+      + '<button class="adv-pill" id="adv'+m.id+p.key+'2" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'2\')">'+tla(m.t2)+'</button>'
+      + '</div>';
+    }
   }
   return '<div class="match" id="m'+m.id+'">'
    + '<div class="m-head" onclick="toggleMatch('+m.id+')">'
@@ -1366,6 +1478,12 @@ function matchCard(m){
    +     '<input class="res-box" id="r'+m.id+'a" maxlength="2" inputmode="numeric" placeholder="·" onclick="event.stopPropagation()" oninput="onRes('+m.id+')">'
    +     '<div class="t-name away">'+clean(m.t2)+'</div>'
    +   '</div>'
+   +   (isKO(m)
+        ? '<div class="adv-line" id="radv'+m.id+'" style="display:none;margin-top:8px;"><span class="adv-tag">WENT THROUGH:</span>'
+        + '<button class="adv-pill" id="radv'+m.id+'1" onclick="event.stopPropagation();onResAdv('+m.id+',\'1\')">'+tla(m.t1)+'</button>'
+        + '<button class="adv-pill" id="radv'+m.id+'2" onclick="event.stopPropagation();onResAdv('+m.id+',\'2\')">'+tla(m.t2)+'</button></div>'
+        + '<div class="thru-note" id="thru'+m.id+'" style="display:none;"></div>'
+        : '')
    +   '<div class="preds">'+predRows+'</div>'
    +   '<div class="tap-hint">Tap the card for the pre-match analysis</div>'
    + '</div>'
@@ -1385,6 +1503,9 @@ function buildUI(){
          +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games",4:"Round of 32",5:"Round of 16",6:"Quarter-finals",7:"Semi-finals",8:"Third-Place Play-off & Final"}[r]+'</h2>'
          +  '<span class="count">'+ms.length+' matches</span><span class="chev">&#9662;</span></div>'
          +  '<div class="sec-body">';
+    if(r>=5){
+      html += '<div class="ko-note"><b>Knockout rules:</b> predict the <b>90-minute score</b> (a draw is a valid call) and tap <b>who '+(r===8?'wins':'goes through')+'</b> — correct pick = <b>+3 pts</b>, extra time and penalties included.</div>';
+    }
     let lastDate = "";
     for(const m of ms){
       if(m.d!==lastDate){ html += '<div class="date-label">'+m.d+'</div>'; lastDate = m.d; }
