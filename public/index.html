@@ -1528,7 +1528,7 @@ function matchCard(m){
     + '<div class="p-pts" id="pts'+m.id+p.key+'"></div>';
     if(isKO(m)){
       predRows +=
-        '<div class="adv-line"><span class="adv-tag">'+(m.r===8 ? 'WINS:' : 'THROUGH:')+'</span>'
+        '<div class="adv-line"><span class="adv-tag">WINNER IF EXTRA-TIME/PENALTIES:</span>'
       + '<button class="adv-pill" id="adv'+m.id+p.key+'1" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'1\')">'+tla(m.t1)+'</button>'
       + '<button class="adv-pill" id="adv'+m.id+p.key+'2" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'2\')">'+tla(m.t2)+'</button>'
       + '</div>';
