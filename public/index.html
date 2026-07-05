@@ -245,7 +245,7 @@
       <tbody id="boardBody"></tbody>
     </table>
     </div>
-    <div class="scoring-note">All games: exact 90-minute score = 5 pts · correct 90-minute result (win/draw) = 2 pts. Knockouts: also pick who goes through = +3 pts, however the tie is settled — extra time and penalties included. Predictions lock at kick-off; the table updates as results go in.</div>
+    <div class="scoring-note">All games: exact 90-minute score = 5 pts · correct 90-minute result (win/draw) = 2 pts. Knockouts: also pick who goes through — worth +1 pt, and only if the game is level after 90 minutes. Settled inside 90 = no bonus for anyone. Predictions lock at kick-off; the table updates as results go in.</div>
   </div>
 
   <div id="rounds"></div>
@@ -1088,7 +1088,71 @@ const OVERVIEWS = {
   + sp(["Australia","Prefers a 4-4-2, hard-working and direct","Compact, and best on the counter"],
        ["Egypt","Prefers a 4-2-3-1, solid and counter-attacking","Hard to break down; lethal in transition through Salah"])
   + hm("Two cautious, well-drilled sides who prefer to sit in and strike on the break — so someone will have to take the initiative. Egypt carry the bigger match-winner in Salah, while Australia's energy and Irankunda's spark give them a puncher's chance. A tight, low-scoring affair looks likely, with Egypt marginally favoured.")
-  + od(33,30,37,"Australia","Egypt")
+  + od(33,30,37,"Australia","Egypt"),
+ 89: fg(["Paraguay","Stunned Germany on penalties after a 1-1 draw in the round of 32","A first-ever knockout win; Enciso scored, Germany cracked"],
+        ["France","Swept Sweden aside 3-0 with Mbappé scoring twice","Maximum points so far; the tournament favourites"])
+  + pw(["Paraguay","Julio Enciso — scored against Germany, carries the counter alone","Andrés Cubas — the destroyer screening the back line"],
+       ["France","Kylian Mbappé — six goals already, the tournament's biggest threat","Michael Olise — pure class linking midfield and attack"])
+  + sp(["Paraguay","Sits ultra-deep in a 4-4-2 low block","Counters and set-pieces; comfortable without the ball"],
+       ["France","Prefers a 4-3-3 with elite depth everywhere","Patient control, devastating in transition"])
+  + hm("Giant-killers against the favourites. Paraguay's block frustrated Germany for 120 minutes and will invite France on in exactly the same way; the question is how long the dam holds against Mbappé, Olise and Dembélé. France's movement should eventually prise an opening — patience their only real opponent.")
+  + rs("Paraguay 0–1 France (FT)"),
+ 90: fg(["Canada","Ground past South Africa 1-0 for a first knockout win","Missing the injured Alphonso Davies; home hopes still high"],
+        ["Morocco","Beat the Netherlands on penalties after a 1-1 draw","Unbeaten all tournament; AFCON champions in January"])
+  + pw(["Canada","Jonathan David — the clinical focal point up front","Tajon Buchanan — direct running in Davies' absence"],
+       ["Morocco","Achraf Hakimi — relentless overlapping threat at right-back","Brahim Díaz — invention between the lines"])
+  + sp(["Canada","Presses high in an aggressive 4-3-3","Direct and physical; vulnerable at the back"],
+       ["Morocco","Prefers a 4-3-3 with a low-risk spine","Elite defensive structure, lightning counters"])
+  + hm("Canada's press and crowd against the tournament's meanest defence. Without Davies the hosts lack their game-breaker, and Morocco's shape is built to absorb exactly this kind of energy before striking through Hakimi and Díaz. The 2022 semi-finalists look the more complete side by some distance.")
+  + rs("Canada 0–3 Morocco (FT)"),
+ 91: fg(["Brazil","Came from behind to beat Japan 2-1, Martinelli striking in stoppage time","Topped Group C but still short of their fluent best"],
+        ["Norway","Haaland's late winner saw off Ivory Coast 2-1","Group I runners-up after resting stars against France"])
+  + pw(["Brazil","Vinícius Júnior — the game-breaker on the left","Casemiro — scored against Japan, anchors everything"],
+       ["Norway","Erling Haaland — five goals, ruthless with one chance","Antonio Nusa — scored against Ivory Coast, direct and fearless"])
+  + sp(["Brazil","Prefers a 4-3-3 under Ancelotti, patient and powerful","Wingers carry the threat; ruthless when it clicks"],
+       ["Norway","Prefers a 4-3-3 built around Haaland's movement","Direct and physical; the defence can be got at"])
+  + hm("The tournament's most lethal striker against its most talented squad. Brazil keep winning while needing rescuing — Japan led until the 56th minute — and Norway's directness manufactures Haaland one clean chance a half. If Brazil's full-backs push high, Ødegaard and Nusa counter into the space. Genuine danger for the favourites.")
+  + od(54,25,21,"Brazil","Norway"),
+ 92: fg(["Mexico","Saw off Ecuador 2-0 with early goals from Quiñones and Jiménez","Perfect at home: four wins, not a single goal conceded"],
+        ["England","Came from behind to beat DR Congo 2-1, Kane scoring twice","Unbeaten, but yet to hit fluency under Tuchel"])
+  + pw(["Mexico","Raúl Jiménez — scoring freely in a raucous Azteca","Gilberto Mora — the teenager unlocking deep defences"],
+       ["England","Harry Kane — a late brace rescued the Congo tie","Jude Bellingham — England's driver on the big occasion"])
+  + sp(["Mexico","Prefers a 4-3-3 with quick wide combinations","Fluent and confident; roared on at altitude"],
+       ["England","Prefers a 4-2-3-1 under Tuchel","Pragmatic control, strong at set-pieces; slow starts a worry"])
+  + hm("A heavyweight tie at the Azteca. Mexico are unbeaten, unbreached and carried by 87,000 at altitude; England keep finding late answers without yet playing well, and trailed DR Congo for over an hour. Tuchel's set-piece threat against a defence yet to concede — the hosts' dream run meets its first true test.")
+  + od(30,30,40,"Mexico","England"),
+ 93: fg(["Portugal","Edged Croatia 2-1 — Ronaldo from the spot, Ramos in stoppage time","Group K runners-up behind Colombia"],
+        ["Spain","Routed Austria 3-0 through Oyarzabal's double and Porro","European champions, cruising and yet to be truly tested"])
+  + pw(["Portugal","Cristiano Ronaldo — 41, scoring at a record sixth World Cup","Vitinha — the metronome who dictates the tempo"],
+       ["Spain","Lamine Yamal — fit, firing and unplayable on his day","Mikel Oyarzabal — braces against Saudi Arabia and Austria"])
+  + sp(["Portugal","Prefers a 4-2-3-1 packed with technical quality","Patient possession; Ronaldo's minutes carefully managed"],
+       ["Spain","Prefers a 4-3-3 with Rodri anchoring midfield","Positional dominance; suffocating in possession"])
+  + hm("An Iberian derby for a quarter-final place — the tie of the round. Spain have looked the tournament's most complete side and will strangle the game through Pedri and Rodri; Portugal's route is transition speed around Ronaldo and dead-ball quality. Neighbours and rivals, but a real gulf in current form.")
+  + od(24,26,50,"Portugal","Spain"),
+ 94: fg(["USA","Beat Bosnia 2-0 through Balogun and Tillman","Group D winners; belief growing on home soil"],
+        ["Belgium","Survived a 3-2 extra-time epic against Senegal","Tielemans' 120th-minute penalty settled it; defensively ragged"])
+  + pw(["USA","Christian Pulisic — the talisman and main creator","Folarin Balogun — scored again against Bosnia, in the form of his life"],
+       ["Belgium","Kevin De Bruyne — the creative heartbeat of his final tournament","Romelu Lukaku — scored against Senegal, the obvious out-ball"])
+  + sp(["USA","Presses high from a 4-3-3 under Pochettino","Front-foot at home; energy over polish"],
+       ["Belgium","Prefers a 4-2-3-1 under Rudi Garcia","Quality in midfield; a defence that keeps leaking"])
+  + hm("A rematch of the 2014 epic Belgium won in extra time. The US bring energy, a home crowd and a settled press against a side with more talent and less structure — and 120 bruising minutes against Senegal in their legs. If the hosts run hard early, the ageing Belgian spine could crack.")
+  + od(36,28,36,"USA","Belgium"),
+ 95: fg(["Argentina","Needed extra time to shake off Cape Verde, 3-2 after 1-1","The champions surviving rather than sparkling"],
+        ["Egypt","Held Australia 1-1 and won the shootout 4-2","A first knockout win; Salah leading a resolute unit"])
+  + pw(["Argentina","Lionel Messi — six group goals, the all-time World Cup record scorer","Julián Álvarez — relentless movement and finishing"],
+       ["Egypt","Mohamed Salah — the talisman and only true match-winner","Omar Marmoush — pace and a growing threat alongside"])
+  + sp(["Argentina","Prefers a 4-3-3 under Scaloni, controlled and clinical","Streetwise; find another gear when it matters"],
+       ["Egypt","Prefers a 4-2-3-1, solid and counter-attacking","Deep block; everything flows down Salah's right side"])
+  + hm("The holders against the tournament's most stubborn block. Egypt have conceded three in four games and would happily take this to penalties; Argentina were dragged into extra time by Cape Verde and cannot afford similar sloppiness. Messi against a massed defence, Salah on the counter — the script writes itself.")
+  + od(70,20,10,"Argentina","Egypt"),
+ 96: fg(["Switzerland","Eased past Algeria 2-0 through Embolo and Ndoye","Group B winners, quietly excellent all tournament"],
+        ["Colombia","Arias struck early to beat Ghana 1-0","Unbeaten in five; dominant without the scorelines to match"])
+  + pw(["Switzerland","Granit Xhaka — the experienced midfield general","Breel Embolo — scored inside ten minutes against Algeria"],
+       ["Colombia","Luis Díaz — one of the players of the tournament","James Rodríguez — orchestrates from an advanced role"])
+  + sp(["Switzerland","Prefers a 4-2-3-1, organised and pragmatic","Solid defensively; efficient going forward"],
+       ["Colombia","Prefers a 4-3-3 full of flair and pace","Quick, direct attacks orchestrated by James"])
+  + hm("Swiss structure against Colombian rhythm in Vancouver. Colombia have been the neutrals' pick — Díaz electric, James rolling back the years — yet created far more than they converted against Ghana. Switzerland concede little and punish lapses; a Colombian opener blows the game open, a Swiss one starts a siege.")
+  + od(27,30,43,"Switzerland","Colombia")
 };
 
 /* ---------------- state & storage ---------------- */
@@ -1133,8 +1197,10 @@ function advancerOf(res){
 }
 function advBonus(m,pred,res){
   if(!m || !isKO(m)) return 0;
-  const adv = advancerOf(res);
-  return (adv && pred && (pred[2]||"")===adv) ? 3 : 0;
+  if(!res || res[0]==="" || res[1]==="" || res[0]==null || res[1]==null) return 0;
+  if(+res[0] !== +res[1]) return 0;   // decided inside 90 minutes: the through-pick is void
+  const adv = res[2] || "";
+  return (adv && pred && (pred[2]||"")===adv) ? 1 : 0;
 }
 
 /* -------- persistence helpers -------- */
@@ -1384,7 +1450,9 @@ function refreshMatch(id){
       } else { ptsEl.textContent = ""; }
     }
     if(isKO(m)){
-      const advKnown = advancerOf(state.r[id]||["",""]);
+      const r0 = state.r[id]||["",""];
+      const bothIn0 = r0[0]!=="" && r0[1]!=="" && r0[0]!=null && r0[1]!=null;
+      const advKnown = (bothIn0 && +r0[0]===+r0[1]) ? (r0[2]||"") : "";
       const pick = pr[2]||"";
       for(const s of ["1","2"]){
         const b = document.getElementById("adv"+id+p.key+s);
@@ -1504,7 +1572,7 @@ function buildUI(){
          +  '<span class="count">'+ms.length+' matches</span><span class="chev">&#9662;</span></div>'
          +  '<div class="sec-body">';
     if(r>=5){
-      html += '<div class="ko-note"><b>Knockout rules:</b> predict the <b>90-minute score</b> (a draw is a valid call) and tap <b>who '+(r===8?'wins':'goes through')+'</b> — correct pick = <b>+3 pts</b>, extra time and penalties included.</div>';
+      html += '<div class="ko-note"><b>Knockout rules:</b> predict the <b>90-minute score</b> (a draw is a valid call) and tap <b>who '+(r===8?'wins':'goes through')+'</b> — correct pick = <b>+1 pt</b>, and only if the game is <b>level after 90</b>. Settled inside 90 minutes = no bonus.</div>';
     }
     let lastDate = "";
     for(const m of ms){
