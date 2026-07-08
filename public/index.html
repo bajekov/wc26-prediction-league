@@ -135,16 +135,6 @@
   }
   .pred-box:focus,.res-box:focus{outline:2px solid var(--gold);outline-offset:1px;}
   .pred-box:disabled{background:var(--paper);color:var(--muted);}
-  .adv-line{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin:-2px 0 6px;padding-left:2px;flex-wrap:wrap;}
-  .adv-tag{font-size:.62rem;font-weight:800;letter-spacing:.12em;color:var(--muted);}
-  .adv-pill{border:1.5px solid var(--line);background:#fff;color:var(--ink);font-weight:800;font-size:.7rem;letter-spacing:.06em;padding:3px 12px;border-radius:999px;cursor:pointer;font-family:inherit;}
-  .adv-pill.sel{background:var(--pitch);border-color:var(--pitch);color:#fff;}
-  .adv-pill:disabled{opacity:.55;cursor:default;}
-  .adv-pill.sel:disabled{opacity:1;}
-  .adv-pill.sel.hit{background:var(--ok);border-color:var(--ok);}
-  .adv-pill.sel.miss{background:var(--red);border-color:var(--red);}
-  .thru-note{margin-top:6px;font-size:.72rem;font-weight:800;color:var(--pitch);letter-spacing:.04em;}
-  .ko-note{margin:14px 0 2px;font-size:.76rem;color:var(--muted);border-left:3px solid var(--gold);padding:6px 10px;background:var(--card);border-radius:0 4px 4px 0;}
   .m-body{display:none;border-top:1px solid var(--line);background:#FBF8EE;padding:14px 16px;font-size:.88rem;}
   .match.open .m-body{display:block;}
   .m-body h4{
@@ -240,12 +230,12 @@
     <div class="board-scroll">
     <table>
       <thead>
-        <tr><th>#</th><th>Player</th><th class="num">Exact</th><th class="num">Outcome</th><th class="num">Thru</th><th class="num hide-sm">Played</th><th class="num">Points</th></tr>
+        <tr><th>#</th><th>Player</th><th class="num">Exact</th><th class="num">Outcome</th><th class="num hide-sm">Played</th><th class="num">Points</th></tr>
       </thead>
       <tbody id="boardBody"></tbody>
     </table>
     </div>
-    <div class="scoring-note">All games: exact 90-minute score = 5 pts · correct 90-minute result (win/draw) = 2 pts. Knockouts: also pick who goes through — worth +1 pt, and only if the game is level after 90 minutes. Settled inside 90 = no bonus for anyone. Predictions lock at kick-off; the table updates as results go in.</div>
+    <div class="scoring-note">Exact score = 5 pts · correct result (win/draw) = 2 pts. Knockout predictions are for the 90-minute score — a draw is a valid call. Updates as soon as a final score goes in; predictions lock once a result is saved.</div>
   </div>
 
   <div id="rounds"></div>
@@ -356,10 +346,10 @@ const MATCHES = [
  {id:94,r:5,t1:"USA",t2:"Belgium",d:"Tuesday 7 July",tm:"1:00am",v:"Lumen Field, Seattle"},
  {id:95,r:5,t1:"Argentina",t2:"Egypt",d:"Tuesday 7 July",tm:"5:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
  {id:96,r:5,t1:"Switzerland",t2:"Colombia",d:"Tuesday 7 July",tm:"9:00pm",v:"BC Place, Vancouver"},
- {id:97,r:6,t1:"W89",t2:"W90",d:"Thursday 9 July",tm:"9:00pm",v:"Gillette Stadium, Foxborough"},
- {id:98,r:6,t1:"W93",t2:"W94",d:"Friday 10 July",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
- {id:99,r:6,t1:"W91",t2:"W92",d:"Saturday 11 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
- {id:100,r:6,t1:"W95",t2:"W96",d:"Sunday 12 July",tm:"2:00am",v:"Arrowhead Stadium, Kansas City"},
+ {id:97,r:6,t1:"France",t2:"Morocco",d:"Thursday 9 July",tm:"9:00pm",v:"Gillette Stadium, Foxborough"},
+ {id:98,r:6,t1:"Spain",t2:"Belgium",d:"Friday 10 July",tm:"8:00pm",v:"SoFi Stadium, Inglewood"},
+ {id:99,r:6,t1:"Norway",t2:"England",d:"Saturday 11 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
+ {id:100,r:6,t1:"Argentina",t2:"Switzerland",d:"Sunday 12 July",tm:"2:00am",v:"Arrowhead Stadium, Kansas City"},
  {id:101,r:7,t1:"W97",t2:"W98",d:"Tuesday 14 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
  {id:102,r:7,t1:"W99",t2:"W100",d:"Wednesday 15 July",tm:"8:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
  {id:103,r:8,t1:"L101",t2:"L102",d:"Saturday 18 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
@@ -1152,7 +1142,39 @@ const OVERVIEWS = {
   + sp(["Switzerland","Prefers a 4-2-3-1, organised and pragmatic","Solid defensively; efficient going forward"],
        ["Colombia","Prefers a 4-3-3 full of flair and pace","Quick, direct attacks orchestrated by James"])
   + hm("Swiss structure against Colombian rhythm in Vancouver. Colombia have been the neutrals' pick — Díaz electric, James rolling back the years — yet created far more than they converted against Ghana. Switzerland concede little and punish lapses; a Colombian opener blows the game open, a Swiss one starts a siege.")
-  + od(27,30,43,"Switzerland","Colombia")
+  + od(27,30,43,"Switzerland","Colombia"),
+ 97: fg(["France","Needed a second-half penalty to break Paraguay's block","Five wins from five and barely threatened at the back"],
+        ["Morocco","Swept Canada aside 3-0 with a ruthless second half","Still unbeaten; the tournament's meanest defence"])
+  + pw(["France","Kylian Mbappé — six goals, the man for the biggest nights","Michael Olise — the tournament's outstanding creator"],
+       ["Morocco","Achraf Hakimi — duels with club-mate Mbappé all night","Azzedine Ounahi — the magic that unlocked Canada"])
+  + sp(["France","Prefers a 4-3-3 with elite depth everywhere","Content without the ball, lethal in transition"],
+       ["Morocco","Prefers a 4-3-3 with a low-risk spine","Elite structure, patient, strikes on the counter"])
+  + hm("A rematch of the 2022 semi-final, and the same shape to it: French firepower against the best defensive structure in the tournament. Hakimi against Mbappé is a club reunion with everything at stake; Morocco will absorb and frustrate, and France's patience — already tested by Paraguay — gets examined all over again.")
+  + od(61,23,16,"France","Morocco"),
+ 98: fg(["Spain","Substitute Merino's added-time winner sank Portugal","Unbeaten, with five clean sheets from five games"],
+        ["Belgium","Hit four past the USA in their best display yet","The slow group-stage start now a distant memory"])
+  + pw(["Spain","Lamine Yamal — the tournament's most feared attacker","Mikel Merino — the super-sub who broke Portugal"],
+       ["Belgium","Kevin De Bruyne — conducting everything in his farewell tournament","Jérémy Doku — tormented the American full-backs"])
+  + sp(["Spain","Prefers a 4-3-3 with Rodri anchoring midfield","Positional dominance; suffocating in possession"],
+       ["Belgium","Prefers a 4-2-3-1 under Rudi Garcia","Attack finally clicking; the defence remains gettable"])
+  + hm("Europe's champions against its awakening giant. Spain haven't conceded all tournament and control every game through Pedri and Rodri; Belgium just produced their statement performance and carry real menace through De Bruyne and Doku. If anyone can finally breach Spain it's this attack — but they'll see precious little of the ball.")
+  + od(59,24,17,"Spain","Belgium"),
+ 99: fg(["Norway","Haaland's brace dumped Brazil out in New Jersey","A first-ever World Cup quarter-final"],
+        ["England","Survived the Azteca 3-2 with ten men after Quansah's red","Bellingham struck twice; nerve held when it mattered"])
+  + pw(["Norway","Erling Haaland — seven goals, in a Golden Boot duel with Messi","Martin Ødegaard — the conductor who dismantled Brazil's midfield"],
+       ["England","Harry Kane — nerveless from the spot at the Azteca","Jude Bellingham — two in two minutes; the big-game player"])
+  + sp(["Norway","Prefers a 4-3-3 built around Haaland's movement","Direct and physical; dangerous the moment you push up"],
+       ["England","Prefers a 4-2-3-1 under Tuchel","Pragmatic control, set-piece strength; reshuffled at the back"])
+  + hm("England meet the tournament's great disruptors. Norway just beat Brazil playing exactly as they will here — compact, direct, Haaland ruthless with half a chance — and England must reorganise a defence missing the suspended Quansah. Tuchel's control and dead-ball threat should tell, but Haaland against a patched-up backline is the tie's defining duel.")
+  + od(23,25,52,"Norway","England"),
+ 100: fg(["Argentina","Three goals in fifteen minutes broke Egypt 3-2","Messi's equaliser, then Enzo Fernández in stoppage time"],
+         ["Switzerland","Goalless with Colombia, then nerveless in the shootout","A first quarter-final since 1954; three conceded in six games"])
+  + pw(["Argentina","Lionel Messi — the record scorer, still deciding the biggest moments","Julián Álvarez — relentless movement and finishing"],
+       ["Switzerland","Granit Xhaka — the general who shackled Colombia","Breel Embolo — the focal point, awkward for any defence"])
+  + sp(["Argentina","Prefers a 4-3-3 under Scaloni, controlled and clinical","Streetwise; find another gear when it matters"],
+       ["Switzerland","Prefers a 4-2-3-1, organised and pragmatic","Concede little, waste less, fear nobody"])
+  + hm("The champions against the tournament's great grinders. Switzerland have just proved they will happily go the distance, while Argentina needed late escapes against both Cape Verde and Egypt. Scaloni's side always find the moment — but if this is still level with twenty minutes left, Swiss nerve becomes a very real factor.")
+  + od(56,26,18,"Argentina","Switzerland")
 };
 
 /* ---------------- state & storage ---------------- */
@@ -1182,25 +1204,6 @@ function pointsFor(pred,res){
   if(ph===rh && pa===ra) return 5;
   if(outcome(ph,pa)===outcome(rh,ra)) return 2;
   return 0;
-}
-
-/* -------- knockout advancement helpers -------- */
-const TLA = {"Canada":"CAN","Morocco":"MAR","Paraguay":"PAR","France":"FRA","Brazil":"BRA","Norway":"NOR","Mexico":"MEX","England":"ENG","Portugal":"POR","Spain":"ESP","USA":"USA","Belgium":"BEL","Argentina":"ARG","Egypt":"EGY","Switzerland":"SUI","Colombia":"COL"};
-function tla(n){ return TLA[n] || n.slice(0,3).toUpperCase(); }
-function isKO(m){ return m.r>=5; }
-function advancerOf(res){
-  if(!res || res[0]==="" || res[1]==="" || res[0]==null || res[1]==null) return "";
-  const rh=+res[0], ra=+res[1];
-  if(rh>ra) return "1";
-  if(rh<ra) return "2";
-  return res[2] || "";
-}
-function advBonus(m,pred,res){
-  if(!m || !isKO(m)) return 0;
-  if(!res || res[0]==="" || res[1]==="" || res[0]==null || res[1]==null) return 0;
-  if(+res[0] !== +res[1]) return 0;   // decided inside 90 minutes: the through-pick is void
-  const adv = res[2] || "";
-  return (adv && pred && (pred[2]||"")===adv) ? 1 : 0;
 }
 
 /* -------- persistence helpers -------- */
@@ -1320,10 +1323,7 @@ function onPred(id, pk){
   activeInputs.add("p"+id+pk+"h");
   activeInputs.add("p"+id+pk+"a");
   if(!state.p[id]) state.p[id] = {};
-  const prev = state.p[id][pk] || [];
-  const mm = MATCHES.find(x=>x.id===id);
   const val = [h.value, a.value];
-  if(mm && isKO(mm)) val.push(prev[2]||"");
   state.p[id][pk] = val;
   const key = id+pk;
   pendingPreds[key] = { id, pk, v: val, ts: Date.now() };
@@ -1341,10 +1341,7 @@ function onRes(id){
   digitsOnly(h); digitsOnly(a);
   activeInputs.add("r"+id+"h");
   activeInputs.add("r"+id+"a");
-  const prevR = state.r[id] || [];
-  const mm = MATCHES.find(x=>x.id===id);
   const val = [h.value, a.value];
-  if(mm && isKO(mm)) val.push(prevR[2]||"");
   state.r[id] = val;
   pendingRes[id] = { id, v: val, ts: Date.now() };
   persistPendingRes();
@@ -1357,32 +1354,6 @@ function onRes(id){
     activeInputs.delete("r"+id+"h");
     activeInputs.delete("r"+id+"a");
   }, 500);
-}
-
-function onAdv(id, pk, side){
-  const m = MATCHES.find(x=>x.id===id);
-  if(!m || !isKO(m)) return;
-  if(!state.p[id]) state.p[id] = {};
-  const prev = state.p[id][pk] || ["",""];
-  const val = [prev[0]||"", prev[1]||"", (prev[2]||"")===side ? "" : side];
-  state.p[id][pk] = val;
-  pendingPreds[id+pk] = { id, pk, v: val, ts: Date.now() };
-  persistPending();
-  refreshMatch(id);
-  queueSave();
-}
-
-function onResAdv(id, side){
-  const prev = state.r[id] || ["",""];
-  const val = [prev[0]||"", prev[1]||"", (prev[2]||"")===side ? "" : side];
-  state.r[id] = val;
-  pendingRes[id] = { id, v: val, ts: Date.now() };
-  persistPendingRes();
-  refreshMatch(id);
-  renderBoard();
-  setSave("Saving…","busy");
-  clearTimeout(resTimers[id]);
-  resTimers[id] = setTimeout(()=>saveResult(id), 300);
 }
 
 /* -------- rendering -------- */
@@ -1440,78 +1411,30 @@ function refreshMatch(id){
     if(ptsEl){
       if(done){
         const pts = pointsFor(pr, state.r[id]);
-        const bonus = advBonus(m, pr, state.r[id]);
-        if(pts===null && bonus===0){ ptsEl.textContent = "no entry"; ptsEl.className = "p-pts s0"; }
-        else {
-          const tot = (pts||0) + bonus;
-          ptsEl.textContent = "+"+tot;
-          ptsEl.className = "p-pts s"+(pts===5 ? 5 : (pts===2 || bonus>0 ? 2 : 0));
-        }
+        if(pts===null){ ptsEl.textContent = "no entry"; ptsEl.className = "p-pts s0"; }
+        else { ptsEl.textContent = "+"+pts; ptsEl.className = "p-pts s"+pts; }
       } else { ptsEl.textContent = ""; }
-    }
-    if(isKO(m)){
-      const r0 = state.r[id]||["",""];
-      const bothIn0 = r0[0]!=="" && r0[1]!=="" && r0[0]!=null && r0[1]!=null;
-      const advKnown = (bothIn0 && +r0[0]===+r0[1]) ? (r0[2]||"") : "";
-      const pick = pr[2]||"";
-      for(const s of ["1","2"]){
-        const b = document.getElementById("adv"+id+p.key+s);
-        if(!b) continue;
-        b.disabled = lockPreds;
-        let cls = "adv-pill";
-        if(pick===s){
-          cls += " sel";
-          if(done && advKnown) cls += (advKnown===pick ? " hit" : " miss");
-        }
-        b.className = cls;
-      }
-    }
-  }
-
-  if(isKO(m)){
-    const r2 = state.r[id]||["",""];
-    const bothIn = r2[0]!=="" && r2[1]!=="" && r2[0]!=null && r2[1]!=null;
-    const draw = bothIn && +r2[0]===+r2[1];
-    const radv = document.getElementById("radv"+id);
-    if(radv){
-      radv.style.display = (adminMode && draw) ? "flex" : "none";
-      for(const s of ["1","2"]){
-        const b = document.getElementById("radv"+id+s);
-        if(b) b.className = "adv-pill" + ((r2[2]||"")===s ? " sel" : "");
-      }
-    }
-    const tn = document.getElementById("thru"+id);
-    if(tn){
-      const adv = advancerOf(r2);
-      if(done && draw && adv){
-        tn.textContent = "→ " + (adv==="1" ? m.t1 : m.t2) + " go through (extra time / penalties)";
-        tn.style.display = "block";
-      } else tn.style.display = "none";
     }
   }
 }
 
 function renderBoard(){
   const rows = PLAYERS.map(p=>{
-    let exact=0, outc=0, thru=0, played=0, total=0;
+    let exact=0, outc=0, played=0, total=0;
     for(const m of MATCHES){
       if(!resultEntered(m.id)) continue;
-      const pr = (state.p[m.id]||{})[p.key];
-      const pts = pointsFor(pr, state.r[m.id]);
-      const bonus = advBonus(m, pr, state.r[m.id]);
-      if(pts===null && bonus===0) continue;
+      const pts = pointsFor((state.p[m.id]||{})[p.key], state.r[m.id]);
+      if(pts===null) continue;
       played++;
       if(pts===5) exact++;
       else if(pts===2) outc++;
-      if(bonus>0) thru++;
-      total += (pts||0) + bonus;
+      total += pts;
     }
-    return {name:p.name, exact, outc, thru, played, total};
+    return {name:p.name, exact, outc, played, total};
   }).sort((x,y)=> y.total-x.total || y.exact-x.exact);
   document.getElementById("boardBody").innerHTML = rows.map((r,i)=>
     '<tr><td class="pos">'+(i+1)+'</td><td class="pname">'+r.name+'</td>'
    +'<td class="num">'+r.exact+'</td><td class="num">'+r.outc+'</td>'
-   +'<td class="num">'+r.thru+'</td>'
    +'<td class="num hide-sm">'+r.played+'</td><td class="num ptotal">'+r.total+'</td></tr>'
   ).join("");
 }
@@ -1526,13 +1449,6 @@ function matchCard(m){
     + '<div class="vs">–</div>'
     + '<input class="pred-box" id="p'+m.id+p.key+'a" maxlength="2" inputmode="numeric" placeholder="–" onclick="event.stopPropagation()" oninput="onPred('+m.id+',\''+p.key+'\')">'
     + '<div class="p-pts" id="pts'+m.id+p.key+'"></div>';
-    if(isKO(m)){
-      predRows +=
-        '<div class="adv-line"><span class="adv-tag">WINNER IF EXTRA-TIME/PENALTIES:</span>'
-      + '<button class="adv-pill" id="adv'+m.id+p.key+'1" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'1\')">'+tla(m.t1)+'</button>'
-      + '<button class="adv-pill" id="adv'+m.id+p.key+'2" onclick="event.stopPropagation();onAdv('+m.id+',\''+p.key+'\',\'2\')">'+tla(m.t2)+'</button>'
-      + '</div>';
-    }
   }
   return '<div class="match" id="m'+m.id+'">'
    + '<div class="m-head" onclick="toggleMatch('+m.id+')">'
@@ -1546,12 +1462,6 @@ function matchCard(m){
    +     '<input class="res-box" id="r'+m.id+'a" maxlength="2" inputmode="numeric" placeholder="·" onclick="event.stopPropagation()" oninput="onRes('+m.id+')">'
    +     '<div class="t-name away">'+clean(m.t2)+'</div>'
    +   '</div>'
-   +   (isKO(m)
-        ? '<div class="adv-line" id="radv'+m.id+'" style="display:none;margin-top:8px;"><span class="adv-tag">WENT THROUGH:</span>'
-        + '<button class="adv-pill" id="radv'+m.id+'1" onclick="event.stopPropagation();onResAdv('+m.id+',\'1\')">'+tla(m.t1)+'</button>'
-        + '<button class="adv-pill" id="radv'+m.id+'2" onclick="event.stopPropagation();onResAdv('+m.id+',\'2\')">'+tla(m.t2)+'</button></div>'
-        + '<div class="thru-note" id="thru'+m.id+'" style="display:none;"></div>'
-        : '')
    +   '<div class="preds">'+predRows+'</div>'
    +   '<div class="tap-hint">Tap the card for the pre-match analysis</div>'
    + '</div>'
@@ -1571,9 +1481,6 @@ function buildUI(){
          +  '<div class="sec-head" onclick="toggleSec('+r+')"><h2>'+{1:"Round 1 — Opening Fixtures",2:"Round 2",3:"Round 3 — Final Group Games",4:"Round of 32",5:"Round of 16",6:"Quarter-finals",7:"Semi-finals",8:"Third-Place Play-off & Final"}[r]+'</h2>'
          +  '<span class="count">'+ms.length+' matches</span><span class="chev">&#9662;</span></div>'
          +  '<div class="sec-body">';
-    if(r>=5){
-      html += '<div class="ko-note"><b>Knockout rules:</b> predict the <b>90-minute score</b> (a draw is a valid call) and tap <b>who '+(r===8?'wins':'goes through')+'</b> — correct pick = <b>+1 pt</b>, and only if the game is <b>level after 90</b>. Settled inside 90 minutes = no bonus.</div>';
-    }
     let lastDate = "";
     for(const m of ms){
       if(m.d!==lastDate){ html += '<div class="date-label">'+m.d+'</div>'; lastDate = m.d; }
