@@ -104,6 +104,7 @@
   .b-note.won{color:var(--ok);font-weight:800;}
   .b-note.lost{color:var(--red);font-weight:800;}
   .b-note.warn{color:var(--red);font-weight:700;}
+  .b-avail{font-size:.68rem;font-weight:800;color:var(--pitch);white-space:nowrap;}
   .clear-bet{border:none;background:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:0 2px;}
   .settle-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
   .settle-tag{font-size:.62rem;font-weight:800;letter-spacing:.12em;color:var(--muted);}
@@ -415,7 +416,7 @@ function onSide(id, pk, side){ // side: '1' | 'X' | '2'
   const next = (cur.s===side) ? "" : side;
   state.b[id][pk] = { s: next, k: cur.k|0 };
   saveBet(id, pk);
-  refreshMarket(id);
+  for(const _x of MARKETS) refreshMarket(_x.id);
   renderBoard();
 }
 
@@ -426,7 +427,7 @@ function onStake(id, pk){
   if(!state.b[id]) state.b[id] = {};
   const cur = state.b[id][pk] || {};
   state.b[id][pk] = { s: cur.s||"", k: parseInt(el.value||"0",10) };
-  refreshMarket(id, true);
+  for(const _x of MARKETS) refreshMarket(_x.id, _x.id===id);
   renderBoard();
   setTimeout(()=>activeInputs.delete("k"+id+pk), 500);
 }
@@ -446,7 +447,7 @@ function onStakeDone(id, pk){
   const c = state.b[id][pk] || {};
   state.b[id][pk] = { s: c.s||"", k };
   saveBet(id, pk);
-  refreshMarket(id);
+  for(const _x of MARKETS) refreshMarket(_x.id);
   renderBoard();
 }
 
@@ -457,7 +458,7 @@ function clearBet(id, pk){
   pendingBets[id+pk] = { id, pk, v:null, ts: Date.now() };
   persistPendingBets();
   queueSave();
-  refreshMarket(id);
+  for(const _x of MARKETS) refreshMarket(_x.id);
   renderBoard();
 }
 
@@ -470,7 +471,7 @@ function onSettle(id, side){
   setSave("Saving…","busy");
   clearTimeout(settleTimers[id]);
   settleTimers[id] = setTimeout(()=>saveSettle(id), 300);
-  refreshMarket(id);
+  for(const _x of MARKETS) refreshMarket(_x.id);
   renderBoard();
 }
 
@@ -551,7 +552,7 @@ async function saveSettle(id){
     clearTimeout(settleTimers[id]);
     settleTimers[id] = setTimeout(()=>saveSettle(id), 4000);
   }
-  refreshMarket(id);
+  for(const _x of MARKETS) refreshMarket(_x.id);
   renderBoard();
 }
 
@@ -593,6 +594,7 @@ function marketCard(m){
     + '<button class="side-pill" id="s'+m.id+p.key+'2" onclick="event.stopPropagation();onSide('+m.id+',\''+p.key+'\',\'2\')">'+tla(m.t2)+' @'+m.o2.toFixed(2)+'</button>'
     + '<input class="stake-box" id="k'+m.id+p.key+'" maxlength="6" inputmode="numeric" placeholder="stake" onclick="event.stopPropagation()" oninput="onStake('+m.id+',\''+p.key+'\')" onchange="onStakeDone('+m.id+',\''+p.key+'\')">'
     + '<button class="clear-bet" id="x'+m.id+p.key+'" title="Clear bet" onclick="event.stopPropagation();clearBet('+m.id+',\''+p.key+'\')">&#10005;</button>'
+    + '<span class="b-avail" id="a'+m.id+p.key+'"></span>'
     + '<span class="b-note" id="n'+m.id+p.key+'"></span>'
     + '</div>';
   }
@@ -665,6 +667,8 @@ function refreshMarket(id, keepNote){
     }
     const xEl = document.getElementById("x"+id+p.key);
     if(xEl) xEl.style.display = (lock || (!b.s && !b.k)) ? "none" : "inline";
+    const aEl = document.getElementById("a"+id+p.key);
+    if(aEl) aEl.textContent = open ? money(led.free[p.key])+" left" : "";
     const nEl = document.getElementById("n"+id+p.key);
     if(nEl && !keepNote){
       const out = (led.outcome[id]||{})[p.key];
@@ -679,7 +683,7 @@ function refreshMarket(id, keepNote){
       else if(!b.s && b.k>0){ nEl.textContent = "pick an outcome"; nEl.className = "b-note warn"; }
       else {
         const avail = led.free[p.key];
-        nEl.textContent = open ? (avail < MIN_BET ? (avail>0 ? "all-in only: $"+avail : "out of tokens this round") : "min $"+MIN_BET+" · max $"+avail) : "";
+        nEl.textContent = open ? (avail < MIN_BET ? (avail>0 ? "all-in only: $"+avail : "out of tokens this round") : "min $"+MIN_BET) : "";
         nEl.className = "b-note";
       }
     }
