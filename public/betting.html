@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Holme Hale Betting League</title>
+<style>
+  :root{
+    --paper:#F4EFE2; --card:#FDFBF4; --ink:#1E2A23;
+    --pitch:#0E5138; --pitch-deep:#0A3A28;
+    --gold:#C9A227; --gold-soft:#E8D9A8; --line:#D8D0BC;
+    --red:#B23A2F; --muted:#6E7A70; --ok:#1E7A45;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45;}
+  header{background:linear-gradient(160deg,var(--pitch-deep),var(--pitch));color:#F6F2E4;
+    padding:26px 18px 22px;border-bottom:4px solid var(--gold);}
+  .head-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:18px;}
+  .chips{flex:0 0 auto;width:58px;height:78px;}
+  h1{font-size:clamp(1.25rem,3.5vw,2rem);font-weight:900;text-transform:uppercase;letter-spacing:.06em;line-height:1.15;}
+  .app-tabs{max-width:980px;margin:0 auto;padding:0 18px;display:flex;gap:8px;}
+  .app-tabs a{flex:1;max-width:220px;text-align:center;padding:10px 0 8px;
+    font-weight:900;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+    text-decoration:none;color:var(--pitch);background:var(--card);
+    border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;}
+  .app-tabs a.on{background:var(--pitch);color:#F6F2E4;border-color:var(--pitch);}
+  .toolbar{max-width:980px;margin:14px auto 0;padding:0 18px;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;}
+  .save-state{font-size:.78rem;color:var(--muted);min-width:90px;}
+  .save-state.busy{color:var(--gold);}
+  .save-state.err{color:var(--red);}
+  .admin-btn{border:1.5px solid var(--pitch);background:transparent;color:var(--pitch);
+    font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+    padding:7px 14px;border-radius:4px;cursor:pointer;}
+  .admin-btn.on{background:var(--red);border-color:var(--red);color:#fff;}
+  .pw-wrap{display:inline-flex;align-items:center;gap:6px;}
+  .pw-box{width:120px;padding:6px 8px;font-size:.82rem;border:1.5px solid var(--pitch);border-radius:4px;background:#fff;color:var(--ink);}
+  .pw-box:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .pw-err{font-size:.72rem;font-weight:700;color:var(--red);}
+  main{max-width:980px;margin:0 auto;padding:10px 18px 70px;}
+  .board{background:var(--pitch-deep);color:#F6F2E4;border-radius:8px;padding:18px;margin-top:26px;border:1px solid var(--pitch);}
+  .board h2{font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;}
+  th{text-align:left;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-soft);
+    padding:6px 8px;border-bottom:1px solid rgba(246,242,228,.25);}
+  td{padding:8px;border-bottom:1px solid rgba(246,242,228,.12);}
+  td.num,th.num{text-align:center;}
+  .pos{color:var(--gold);font-weight:900;}
+  .pname{font-weight:800;}
+  .ptotal{font-weight:900;font-size:1.05rem;color:var(--gold);}
+  .neg{color:#E7A79D;}
+  .posv{color:#A9D8B8;}
+  .scoring-note{font-size:.7rem;color:rgba(246,242,228,.7);margin-top:8px;}
+  .board-scroll{overflow-x:auto;}
+  section{margin-top:34px;}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--pitch);padding-bottom:6px;}
+  .sec-head h2{font-size:1.05rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--pitch);}
+  .sec-head .count{font-size:.75rem;color:var(--muted);letter-spacing:.05em;}
+  .date-label{margin:22px 0 8px;font-size:.74rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+  .market{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--pitch);
+    border-radius:6px;margin-bottom:12px;box-shadow:0 1px 2px rgba(30,42,35,.07);padding:12px 14px;}
+  .market.locked{border-left-color:var(--gold);}
+  .mk-top{display:flex;align-items:center;gap:8px;}
+  .mk-meta{font-size:.72rem;color:var(--muted);letter-spacing:.04em;}
+  .mk-lock{margin-left:auto;font-size:.64rem;font-weight:800;letter-spacing:.14em;color:var(--red);
+    border:1.5px solid var(--red);border-radius:3px;padding:2px 7px;transform:rotate(-2deg);display:none;}
+  .mk-head{cursor:pointer;}
+  .mk-teams{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:8px;margin-top:8px;}
+  .odds-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+  .odds-cell{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:7px 4px;text-align:center;}
+  .odds-cell .pc{font-weight:900;font-size:.95rem;}
+  .odds-cell .ox{font-size:.72rem;font-weight:700;color:var(--muted);margin-top:1px;}
+  .tap-hint{font-size:.66rem;color:var(--muted);margin-top:8px;letter-spacing:.06em;}
+  .mk-body{display:none;border-top:1px solid var(--line);background:#FBF8EE;margin:12px -14px -12px;padding:14px 16px;font-size:.88rem;}
+  .market.open .mk-body{display:block;}
+  .mk-body h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;color:var(--pitch);margin:14px 0 4px;}
+  .mk-body h4:first-child{margin-top:0;}
+  .mk-body .team-sub{font-weight:800;font-style:italic;margin-top:6px;}
+  .mk-body ul{list-style:none;margin:2px 0 0;}
+  .mk-body li{padding-left:14px;position:relative;margin-top:2px;}
+  .mk-body li::before{content:"\2022";position:absolute;left:0;color:var(--gold);}
+  .mk-body .odds-line{margin-top:2px;}
+  .mk-body .placeholder{color:var(--muted);font-style:italic;}
+  .mk-side{font-weight:900;font-size:clamp(.92rem,2.6vw,1.15rem);text-transform:uppercase;}
+  .mk-side.away{text-align:right;}
+  .mk-odds{font-size:.78rem;font-weight:800;color:var(--pitch);}
+  .vs{text-align:center;color:var(--muted);font-size:.8rem;font-weight:700;}
+  .bets{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
+  .bet-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0;}
+  .b-tag{flex:0 0 44px;font-size:.72rem;font-weight:800;color:var(--pitch);text-align:right;letter-spacing:.1em;}
+  .side-pill{border:1.5px solid var(--line);background:#fff;color:var(--ink);font-weight:800;font-size:.7rem;
+    letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;font-family:inherit;}
+  .side-pill.sel{background:var(--pitch);border-color:var(--pitch);color:#fff;}
+  .side-pill:disabled{opacity:.55;cursor:default;}
+  .side-pill.sel:disabled{opacity:1;}
+  .side-pill.sel.won{background:var(--ok);border-color:var(--ok);}
+  .side-pill.sel.lost{background:var(--red);border-color:var(--red);}
+  .stake-box{width:76px;height:32px;text-align:center;font-size:.95rem;font-weight:700;
+    border:1.5px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);}
+  .stake-box:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .stake-box:disabled{background:var(--paper);color:var(--muted);}
+  .b-note{font-size:.7rem;color:var(--muted);}
+  .b-note.won{color:var(--ok);font-weight:800;}
+  .b-note.lost{color:var(--red);font-weight:800;}
+  .b-note.warn{color:var(--red);font-weight:700;}
+  .clear-bet{border:none;background:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:0 2px;}
+  .settle-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
+  .settle-tag{font-size:.62rem;font-weight:800;letter-spacing:.12em;color:var(--muted);}
+  .rules-inline{margin:14px 0 2px;font-size:.76rem;color:var(--muted);border-left:3px solid var(--gold);
+    padding:6px 10px;background:var(--card);border-radius:0 4px 4px 0;}
+  .offline-note{max-width:980px;margin:10px auto 0;padding:8px 18px;font-size:.75rem;color:var(--red);display:none;}
+  @media (max-width:480px){
+    .b-tag{flex-basis:38px;}
+    .stake-box{width:64px;}
+    .hide-sm{display:none;}
+    .board{padding:14px 10px;}
+    table{font-size:.82rem;}
+    th{font-size:.58rem;letter-spacing:.06em;padding:5px 4px;}
+    td{padding:7px 4px;}
+    .ptotal{font-size:.95rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <svg class="chips" viewBox="0 0 60 84" aria-hidden="true">
+      <defs>
+        <linearGradient id="gld" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F5DC85"/><stop offset=".45" stop-color="#CDA62E"/><stop offset="1" stop-color="#8F6E14"/>
+        </linearGradient>
+      </defs>
+      <g>
+        <ellipse cx="30" cy="70" rx="22" ry="8" fill="url(#gld)"/>
+        <rect x="8" y="58" width="44" height="12" fill="url(#gld)"/>
+        <ellipse cx="30" cy="58" rx="22" ry="8" fill="#E8D9A8"/>
+        <ellipse cx="30" cy="46" rx="22" ry="8" fill="url(#gld)"/>
+        <rect x="8" y="34" width="44" height="12" fill="url(#gld)"/>
+        <ellipse cx="30" cy="34" rx="22" ry="8" fill="#E8D9A8"/>
+        <ellipse cx="30" cy="22" rx="22" ry="8" fill="url(#gld)"/>
+        <rect x="8" y="10" width="44" height="12" fill="url(#gld)"/>
+        <ellipse cx="30" cy="10" rx="22" ry="8" fill="#F5DC85"/>
+        <text x="30" y="13.5" text-anchor="middle" font-size="8" font-weight="900" fill="#8F6E14">WC26</text>
+      </g>
+    </svg>
+    <div>
+      <h1>World Cup 2026<br>Holme Hale Betting League</h1>
+    </div>
+  </div>
+</header>
+
+<nav class="app-tabs">
+  <a class="" href="/">Predictions</a>
+  <a class="on" href="/betting.html">Betting</a>
+</nav>
+
+<div class="offline-note" id="offlineNote">Can't reach the server — check your connection and reload.</div>
+
+<div class="toolbar">
+  <span class="save-state" id="saveState">Loading…</span>
+  <span class="pw-wrap" id="pwWrap" style="display:none;">
+    <input type="password" id="pwBox" class="pw-box" placeholder="Password" autocomplete="off">
+    <button class="admin-btn" id="pwGo">Unlock</button>
+    <span class="pw-err" id="pwErr"></span>
+  </span>
+  <button class="admin-btn" id="adminBtn">Settlement: off</button>
+</div>
+
+<main>
+  <div class="board">
+    <h2>Bankroll</h2>
+    <div class="board-scroll">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Player</th><th class="num">Balance</th><th class="num">In play</th><th class="num hide-sm">P/L</th><th class="num">Rescues</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody id="boardBody"></tbody>
+    </table>
+    </div>
+    <div class="scoring-note">Starting stacks = league points &times; 10. Back the 90-minute result of each game — win, lose or draw; extra time and penalties don't count. Winnings = stake &times; odds. Minimum bet $50; under $50 your only bet is all-in. No bet by kick-off = $50 burned. Flat broke at the end of a round and everyone receives $200 — your rescue is counted.</div>
+  </div>
+
+  <div id="markets"></div>
+</main>
+
+<script>
+/* ---------------- data ---------------- */
+const PLAYERS = [
+  {key:"M", name:"Mam"},
+  {key:"D", name:"Dad"},
+  {key:"A", name:"Alex"}
+];
+const START = { M:1320, D:740, A:1270 };
+const MIN_BET = 50;
+const RESCUE = 200;
+
+const MARKETS = [
+ {id:97, rd:"QF", t1:"France",    t2:"Morocco",     p1:61, pX:23, p2:16, o1:1.65, oX:4.27, o2:6.25, d:"Thursday 9 July",  tm:"9:00pm",  v:"Gillette Stadium, Foxborough"},
+ {id:98, rd:"QF", t1:"Spain",     t2:"Belgium",     p1:59, pX:23, p2:17, o1:1.69, oX:4.27, o2:5.75, d:"Friday 10 July",   tm:"8:00pm",  v:"SoFi Stadium, Inglewood"},
+ {id:99, rd:"QF", t1:"Norway",    t2:"England",     p1:23, pX:25, p2:52, o1:4.44, oX:3.94, o2:1.92, d:"Saturday 11 July", tm:"10:00pm", v:"Hard Rock Stadium, Miami"},
+ {id:100,rd:"QF", t1:"Argentina", t2:"Switzerland", p1:56, pX:26, p2:18, o1:1.78, oX:3.82, o2:5.65, d:"Sunday 12 July",   tm:"2:00am",  v:"Arrowhead Stadium, Kansas City"}
+];
+const ROUND_NAMES = { QF:"Quarter-finals", SF:"Semi-finals", "3RD":"Third-Place Play-off", FIN:"Final" };
+const TLA = {"France":"FRA","Morocco":"MAR","Spain":"ESP","Belgium":"BEL","Norway":"NOR","England":"ENG","Argentina":"ARG","Switzerland":"SUI"};
+function tla(n){ return TLA[n] || n.slice(0,3).toUpperCase(); }
+function oddsOf(m, s){ return s==="1" ? m.o1 : s==="X" ? m.oX : m.o2; }
+function money(n){ return "$" + n; }
+function moneySigned(n){ return (n>=0?"+$":"\u2212$") + Math.abs(n); }
+
+/* ---------------- pre-match analysis (as per the prediction league) ---------------- */
+function fg(a,b){
+  return '<h4>Form Guide</h4><div class="team-sub">'+a[0]+'</div><ul><li>'+a[1]+'</li><li>'+a[2]+'</li></ul>'
+       + '<div class="team-sub">'+b[0]+'</div><ul><li>'+b[1]+'</li><li>'+b[2]+'</li></ul>';
+}
+function pw(a,b){
+  return '<h4>Players to Watch</h4><div class="team-sub">'+a[0]+'</div><ul><li>'+a[1]+'</li><li>'+a[2]+'</li></ul>'
+       + '<div class="team-sub">'+b[0]+'</div><ul><li>'+b[1]+'</li><li>'+b[2]+'</li></ul>';
+}
+function sp(a,b){
+  return '<h4>Style of Play</h4><div class="team-sub">'+a[0]+'</div><ul><li>'+a[1]+'</li><li>'+a[2]+'</li></ul>'
+       + '<div class="team-sub">'+b[0]+'</div><ul><li>'+b[1]+'</li><li>'+b[2]+'</li></ul>';
+}
+function hm(t){return '<h4>How They Match Up</h4><div>'+t+'</div>';}
+function od(a,b,c,n1,n2){
+  return '<h4>Odds</h4><div class="odds-line">'+n1+' win: '+a+'%</div><div class="odds-line">Draw: '+b+'%</div><div class="odds-line">'+n2+' win: '+c+'%</div>';
+}
+const OVERVIEWS = {
+  97: fg(["France","Needed a second-half penalty to break Paraguay's block","Five wins from five and barely threatened at the back"],
+        ["Morocco","Swept Canada aside 3-0 with a ruthless second half","Still unbeaten; the tournament's meanest defence"])
+  + pw(["France","Kylian Mbappé — six goals, the man for the biggest nights","Michael Olise — the tournament's outstanding creator"],
+       ["Morocco","Achraf Hakimi — duels with club-mate Mbappé all night","Azzedine Ounahi — the magic that unlocked Canada"])
+  + sp(["France","Prefers a 4-3-3 with elite depth everywhere","Content without the ball, lethal in transition"],
+       ["Morocco","Prefers a 4-3-3 with a low-risk spine","Elite structure, patient, strikes on the counter"])
+  + hm("A rematch of the 2022 semi-final, and the same shape to it: French firepower against the best defensive structure in the tournament. Hakimi against Mbappé is a club reunion with everything at stake; Morocco will absorb and frustrate, and France's patience — already tested by Paraguay — gets examined all over again.")
+  + od(61,23,16,"France","Morocco"),
+ 98: fg(["Spain","Substitute Merino's added-time winner sank Portugal","Unbeaten, with five clean sheets from five games"],
+        ["Belgium","Hit four past the USA in their best display yet","The slow group-stage start now a distant memory"])
+  + pw(["Spain","Lamine Yamal — the tournament's most feared attacker","Mikel Merino — the super-sub who broke Portugal"],
+       ["Belgium","Kevin De Bruyne — conducting everything in his farewell tournament","Jérémy Doku — tormented the American full-backs"])
+  + sp(["Spain","Prefers a 4-3-3 with Rodri anchoring midfield","Positional dominance; suffocating in possession"],
+       ["Belgium","Prefers a 4-2-3-1 under Rudi Garcia","Attack finally clicking; the defence remains gettable"])
+  + hm("Europe's champions against its awakening giant. Spain haven't conceded all tournament and control every game through Pedri and Rodri; Belgium just produced their statement performance and carry real menace through De Bruyne and Doku. If anyone can finally breach Spain it's this attack — but they'll see precious little of the ball.")
+  + od(59,24,17,"Spain","Belgium"),
+ 99: fg(["Norway","Haaland's brace dumped Brazil out in New Jersey","A first-ever World Cup quarter-final"],
+        ["England","Survived the Azteca 3-2 with ten men after Quansah's red","Bellingham struck twice; nerve held when it mattered"])
+  + pw(["Norway","Erling Haaland — seven goals, in a Golden Boot duel with Messi","Martin Ødegaard — the conductor who dismantled Brazil's midfield"],
+       ["England","Harry Kane — nerveless from the spot at the Azteca","Jude Bellingham — two in two minutes; the big-game player"])
+  + sp(["Norway","Prefers a 4-3-3 built around Haaland's movement","Direct and physical; dangerous the moment you push up"],
+       ["England","Prefers a 4-2-3-1 under Tuchel","Pragmatic control, set-piece strength; reshuffled at the back"])
+  + hm("England meet the tournament's great disruptors. Norway just beat Brazil playing exactly as they will here — compact, direct, Haaland ruthless with half a chance — and England must reorganise a defence missing the suspended Quansah. Tuchel's control and dead-ball threat should tell, but Haaland against a patched-up backline is the tie's defining duel.")
+  + od(23,25,52,"Norway","England"),
+ 100: fg(["Argentina","Three goals in fifteen minutes broke Egypt 3-2","Messi's equaliser, then Enzo Fernández in stoppage time"],
+         ["Switzerland","Goalless with Colombia, then nerveless in the shootout","A first quarter-final since 1954; three conceded in six games"])
+  + pw(["Argentina","Lionel Messi — the record scorer, still deciding the biggest moments","Julián Álvarez — relentless movement and finishing"],
+       ["Switzerland","Granit Xhaka — the general who shackled Colombia","Breel Embolo — the focal point, awkward for any defence"])
+  + sp(["Argentina","Prefers a 4-3-3 under Scaloni, controlled and clinical","Streetwise; find another gear when it matters"],
+       ["Switzerland","Prefers a 4-2-3-1, organised and pragmatic","Concede little, waste less, fear nobody"])
+  + hm("The champions against the tournament's great grinders. Switzerland have just proved they will happily go the distance, while Argentina needed late escapes against both Cape Verde and Egypt. Scaloni's side always find the moment — but if this is still level with twenty minutes left, Swiss nerve becomes a very real factor.")
+  + od(56,26,18,"Argentina","Switzerland")
+};
+
+/* ---------------- state & storage ---------------- */
+let state = { b: {}, s: {} };
+let adminMode = false;
+let adminPw = "";
+let saveTimer = null;
+let pendingBets = {};
+let pendingSettles = {};
+const settleTimers = {};
+const saveEl = document.getElementById("saveState");
+const activeInputs = new Set();
+
+const LS_KEY_B = "hhb-pending";
+const LS_KEY_S = "hhb-pending-set";
+
+function persistPendingBets(){ try{ localStorage.setItem(LS_KEY_B, JSON.stringify(pendingBets)); }catch(e){} }
+function persistPendingSettles(){ try{ localStorage.setItem(LS_KEY_S, JSON.stringify(pendingSettles)); }catch(e){} }
+function setSave(t,c){ saveEl.textContent = t; saveEl.className = "save-state"+(c?" "+c:""); }
+
+function koTime(m){
+  const p = m.d.split(" ");
+  const t = m.tm.slice(0,-2).split(":");
+  let h = +t[0]; const min = +t[1]; const ap = m.tm.slice(-2);
+  if(ap==="pm" && h!==12) h += 12;
+  if(ap==="am" && h===12) h = 0;
+  return new Date(2026, {June:5, July:6}[p[2]], +p[1], h, min).getTime();
+}
+function isSettled(id){ return isSide(state.s[id]); }
+function marketOpen(m){ return !isSettled(m.id) && Date.now() < koTime(m); }
+function betOf(id, pk){
+  const b = (state.b[id]||{})[pk];
+  if(!b || (b.s!=="1" && b.s!=="X" && b.s!=="2") || !(b.k>0)) return null;
+  return b;
+}
+function isSide(s){ return s==="1" || s==="X" || s==="2"; }
+
+/* ---------------- ledger ----------------
+   Everything is derived from bets + settlements, in kick-off order:
+   at kick-off a placed stake leaves the balance (no bet burns min-bet,
+   capped at whatever's left); at settlement winners get stake x odds.
+   After every step, anyone on exactly 0 with nothing still riding
+   triggers a rescue: every player +200, triggerer's count goes up.   */
+function computeLedger(){
+  const bal = {}, pl = {}, rescues = {}, outcome = {};
+  for(const p of PLAYERS){ bal[p.key]=START[p.key]; pl[p.key]=0; rescues[p.key]=0; }
+  const seq = [...MARKETS].sort((a,b)=>koTime(a)-koTime(b));
+  const rounds = [];
+  for(const m of seq){
+    let r = rounds.find(x=>x.rd===m.rd);
+    if(!r){ r = { rd:m.rd, ms:[] }; rounds.push(r); }
+    r.ms.push(m);
+  }
+
+  for(const round of rounds){
+    for(const m of round.ms){
+      const started = isSettled(m.id) || Date.now() >= koTime(m);
+      if(!started) continue;
+      outcome[m.id] = {};
+      for(const p of PLAYERS){
+        const b = betOf(m.id, p.key);
+        if(b){
+          bal[p.key] -= b.k;
+        } else {
+          const burn = Math.min(MIN_BET, bal[p.key]);
+          bal[p.key] -= burn;
+          pl[p.key] -= burn;
+          outcome[m.id][p.key] = { type:"burn", amt:burn };
+        }
+      }
+      if(isSettled(m.id)){
+        const res = state.s[m.id];
+        for(const p of PLAYERS){
+          const b = betOf(m.id, p.key);
+          if(!b) continue;
+          if(b.s === res){
+            const ret = Math.round(b.k * oddsOf(m, b.s) + 1e-9);
+            bal[p.key] += ret;
+            pl[p.key] += ret - b.k;
+            outcome[m.id][p.key] = { type:"won", amt:ret - b.k };
+          } else {
+            pl[p.key] -= b.k;
+            outcome[m.id][p.key] = { type:"lost", amt:b.k };
+          }
+        }
+      } else {
+        for(const p of PLAYERS){
+          const b = betOf(m.id, p.key);
+          if(b) outcome[m.id][p.key] = { type:"live", amt:b.k };
+        }
+      }
+    }
+    // Rebuy only at the end of a completed round: every game settled, then
+    // anyone flat broke triggers the rescue — everybody +200, shame recorded.
+    const roundDone = round.ms.every(m => isSettled(m.id));
+    if(roundDone){
+      let fired = true;
+      while(fired){
+        fired = false;
+        for(const p of PLAYERS){
+          if(bal[p.key]===0){
+            rescues[p.key]++;
+            for(const q of PLAYERS) bal[q.key] += RESCUE;
+            fired = true;
+          }
+        }
+      }
+    }
+  }
+
+  const future = {}, inplay = {};
+  for(const p of PLAYERS){ future[p.key]=0; inplay[p.key]=0; }
+  for(const m of seq){
+    const started = isSettled(m.id) || Date.now() >= koTime(m);
+    for(const p of PLAYERS){
+      const b = betOf(m.id, p.key);
+      if(!b || isSettled(m.id)) continue;
+      inplay[p.key] += b.k;
+      if(!started) future[p.key] += b.k;
+    }
+  }
+  const free = {};
+  for(const p of PLAYERS) free[p.key] = bal[p.key] - future[p.key];
+  return { free, inplay, pl, rescues, outcome };
+}
+
+/* ---------------- input handlers ---------------- */
+function digitsOnly(el){ el.value = el.value.replace(/[^0-9]/g,"").slice(0,6); }
+
+function currentDraft(id, pk){
+  const b = (state.b[id]||{})[pk];
+  return { s: b && b.s || "", k: b && b.k || 0 };
+}
+
+function saveBet(id, pk){
+  const d = currentDraft(id, pk);
+  const key = id + pk;
+  if(d.s && d.k > 0){
+    pendingBets[key] = { id, pk, v:{ s:d.s, k:d.k }, ts: Date.now() };
+  } else if(!d.s && !d.k){
+    pendingBets[key] = { id, pk, v:null, ts: Date.now() };
+  } else {
+    return; // incomplete — wait for the other half before sending
+  }
+  persistPendingBets();
+  queueSave();
+}
+
+function onSide(id, pk, side){ // side: '1' | 'X' | '2'
+  const m = MARKETS.find(x=>x.id===id);
+  if(!m || !marketOpen(m) && !adminMode) return;
+  if(!state.b[id]) state.b[id] = {};
+  const cur = state.b[id][pk] || {};
+  const next = (cur.s===side) ? "" : side;
+  state.b[id][pk] = { s: next, k: cur.k|0 };
+  saveBet(id, pk);
+  refreshMarket(id);
+  renderBoard();
+}
+
+function onStake(id, pk){
+  const el = document.getElementById("k"+id+pk);
+  digitsOnly(el);
+  activeInputs.add("k"+id+pk);
+  if(!state.b[id]) state.b[id] = {};
+  const cur = state.b[id][pk] || {};
+  state.b[id][pk] = { s: cur.s||"", k: parseInt(el.value||"0",10) };
+  refreshMarket(id, true);
+  renderBoard();
+  setTimeout(()=>activeInputs.delete("k"+id+pk), 500);
+}
+
+function onStakeDone(id, pk){
+  const el = document.getElementById("k"+id+pk);
+  const led = computeLedger();
+  const cur = betOf(id, pk);
+  const avail = led.free[pk] + (cur ? cur.k : 0);   // own stake released while editing
+  let k = parseInt(el.value||"0",10) || 0;
+  if(k > 0){
+    if(avail < MIN_BET) k = avail;                  // all-in territory
+    else k = Math.min(Math.max(k, MIN_BET), avail);
+  }
+  el.value = k > 0 ? k : "";
+  if(!state.b[id]) state.b[id] = {};
+  const c = state.b[id][pk] || {};
+  state.b[id][pk] = { s: c.s||"", k };
+  saveBet(id, pk);
+  refreshMarket(id);
+  renderBoard();
+}
+
+function clearBet(id, pk){
+  const m = MARKETS.find(x=>x.id===id);
+  if(!m || !marketOpen(m) && !adminMode) return;
+  if(state.b[id]) delete state.b[id][pk];
+  pendingBets[id+pk] = { id, pk, v:null, ts: Date.now() };
+  persistPendingBets();
+  queueSave();
+  refreshMarket(id);
+  renderBoard();
+}
+
+function onSettle(id, side){
+  const cur = state.s[id];
+  const next = (cur===side) ? null : side;
+  if(next===null) delete state.s[id]; else state.s[id] = next;
+  pendingSettles[id] = { id, side: next, ts: Date.now() };
+  persistPendingSettles();
+  setSave("Saving…","busy");
+  clearTimeout(settleTimers[id]);
+  settleTimers[id] = setTimeout(()=>saveSettle(id), 300);
+  refreshMarket(id);
+  renderBoard();
+}
+
+/* ---------------- server sync ---------------- */
+async function loadState(){
+  try{
+    const res = await fetch("/api/betting");
+    if(!res.ok) throw 0;
+    const s = await res.json();
+    const b = { ...s.b };
+    for(const key in pendingBets){
+      const u = pendingBets[key];
+      if(u.v===null){ if(b[u.id]) delete b[u.id][u.pk]; }
+      else (b[u.id] ||= {})[u.pk] = u.v;
+    }
+    const st = { ...s.s };
+    for(const id in pendingSettles){
+      const u = pendingSettles[id];
+      if(u.side===null) delete st[id]; else st[id] = u.side;
+    }
+    state = { b, s: st };
+    setSave("Saved");
+  }catch(e){
+    document.getElementById("offlineNote").style.display = "block";
+    setSave("Offline","err");
+  }
+}
+
+function queueSave(){
+  setSave("Saving…","busy");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushBets, 300);
+}
+
+async function flushBets(){
+  const updates = Object.values(pendingBets);
+  if(!updates.length){ setSave("Saved"); return; }
+  const items = [...updates];
+  const sentKeys = items.map(u => u.id + u.pk);
+  try{
+    const res = await fetch("/api/betting",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ bets: items, pw: adminPw }), keepalive:true
+    });
+    if(!res.ok) throw new Error("save failed");
+    for(const key of sentKeys){
+      const p = pendingBets[key];
+      const sent = items.find(u => u.id + u.pk === key);
+      if(p && p.ts === sent.ts) delete pendingBets[key];
+    }
+    persistPendingBets();
+    setSave("Saved");
+  }catch(e){
+    persistPendingBets();
+    setSave("Save failed – retrying","err");
+    setTimeout(flushBets, 4000);
+  }
+}
+
+async function saveSettle(id){
+  const entry = pendingSettles[id];
+  if(!entry) return;
+  const sentTs = entry.ts;
+  setSave("Saving…","busy");
+  try{
+    const res = await fetch("/api/betting",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ settle:{ id: entry.id, side: entry.side }, pw: adminPw }), keepalive:true
+    });
+    if(res.status===401){ setSave("Not authorised","err"); return; }
+    if(!res.ok) throw new Error("save failed");
+    if(pendingSettles[id] && pendingSettles[id].ts === sentTs) delete pendingSettles[id];
+    persistPendingSettles();
+    setSave("Saved");
+  }catch(e){
+    persistPendingSettles();
+    setSave("Save failed – retrying","err");
+    clearTimeout(settleTimers[id]);
+    settleTimers[id] = setTimeout(()=>saveSettle(id), 4000);
+  }
+  refreshMarket(id);
+  renderBoard();
+}
+
+async function syncServer(){
+  try{
+    const res = await fetch("/api/betting");
+    if(!res.ok) throw 0;
+    const s = await res.json();
+    for(const id in s.b){
+      for(const pk in (s.b[id]||{})){
+        if(pendingBets[id+pk]) continue;
+        (state.b[id] ||= {})[pk] = s.b[id][pk];
+      }
+    }
+    for(const id in s.s){
+      if(!pendingSettles[id]) state.s[id] = s.s[id];
+    }
+    for(const m of MARKETS) refreshMarket(m.id);
+    renderBoard();
+  }catch(e){}
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible") syncServer();
+});
+
+/* ---------------- rendering ---------------- */
+function clean(n){ return n.replace(/&/g,"&amp;"); }
+
+function toggleMarket(id){ document.getElementById("mk"+id).classList.toggle("open"); }
+
+function marketCard(m){
+  let rows = "";
+  for(const p of PLAYERS){
+    rows +=
+      '<div class="bet-row" id="row'+m.id+p.key+'">'
+    + '<span class="b-tag">'+p.name+'</span>'
+    + '<button class="side-pill" id="s'+m.id+p.key+'1" onclick="event.stopPropagation();onSide('+m.id+',\''+p.key+'\',\'1\')">'+tla(m.t1)+' @'+m.o1.toFixed(2)+'</button>'
+    + '<button class="side-pill" id="s'+m.id+p.key+'X" onclick="event.stopPropagation();onSide('+m.id+',\''+p.key+'\',\'X\')">DRAW @'+m.oX.toFixed(2)+'</button>'
+    + '<button class="side-pill" id="s'+m.id+p.key+'2" onclick="event.stopPropagation();onSide('+m.id+',\''+p.key+'\',\'2\')">'+tla(m.t2)+' @'+m.o2.toFixed(2)+'</button>'
+    + '<input class="stake-box" id="k'+m.id+p.key+'" maxlength="6" inputmode="numeric" placeholder="stake" onclick="event.stopPropagation()" oninput="onStake('+m.id+',\''+p.key+'\')" onchange="onStakeDone('+m.id+',\''+p.key+'\')">'
+    + '<button class="clear-bet" id="x'+m.id+p.key+'" title="Clear bet" onclick="event.stopPropagation();clearBet('+m.id+',\''+p.key+'\')">&#10005;</button>'
+    + '<span class="b-note" id="n'+m.id+p.key+'"></span>'
+    + '</div>';
+  }
+  return '<div class="market" id="mk'+m.id+'">'
+   + '<div class="mk-head" onclick="toggleMarket('+m.id+')">'
+   + '<div class="mk-top"><span class="mk-meta">'+m.d+' · '+m.tm+' BST · '+clean(m.v)+'</span>'
+   + '<span class="mk-lock" id="lk'+m.id+'"></span></div>'
+   + '<div class="mk-teams">'
+   +   '<div class="mk-side">'+clean(m.t1)+'</div>'
+   +   '<div class="vs">v</div>'
+   +   '<div class="mk-side away">'+clean(m.t2)+'</div>'
+   + '</div>'
+   + '<div class="odds-strip">'
+   +   '<div class="odds-cell"><div class="pc">'+m.p1+'%</div><div class="ox">@'+m.o1.toFixed(2)+'</div></div>'
+   +   '<div class="odds-cell"><div class="pc">DRAW '+m.pX+'%</div><div class="ox">@'+m.oX.toFixed(2)+'</div></div>'
+   +   '<div class="odds-cell"><div class="pc">'+m.p2+'%</div><div class="ox">@'+m.o2.toFixed(2)+'</div></div>'
+   + '</div>'
+   + '<div class="bets">'+rows+'</div>'
+   + '<div class="settle-row" id="set'+m.id+'" style="display:none;">'
+   +   '<span class="settle-tag">90-MIN RESULT:</span>'
+   +   '<button class="side-pill" id="set'+m.id+'1" onclick="event.stopPropagation();onSettle('+m.id+',\'1\')">'+tla(m.t1)+'</button>'
+   +   '<button class="side-pill" id="set'+m.id+'X" onclick="event.stopPropagation();onSettle('+m.id+',\'X\')">DRAW</button>'
+   +   '<button class="side-pill" id="set'+m.id+'2" onclick="event.stopPropagation();onSettle('+m.id+',\'2\')">'+tla(m.t2)+'</button>'
+   + '</div>'
+   + '<div class="tap-hint">Tap the card for the pre-match analysis</div>'
+   + '</div>'
+   + '<div class="mk-body">'+(OVERVIEWS[m.id]||'<div class="placeholder">Pre-match analysis to follow.</div>')+'</div>'
+   + '</div>';
+}
+
+function refreshMarket(id, keepNote){
+  const m = MARKETS.find(x=>x.id===id);
+  if(!m) return;
+  const led = computeLedger();
+  const settled = isSettled(id);
+  const open = marketOpen(m);
+  const lock = !open && !adminMode;
+  const card = document.getElementById("mk"+id);
+  if(card) card.classList.toggle("locked", !open);
+  const badge = document.getElementById("lk"+id);
+  if(badge){
+    if(settled){
+      const res = state.s[id];
+      badge.textContent = (res==="X" ? "90-MIN DRAW" : clean(res==="1"?m.t1:m.t2).toUpperCase()+" WON (90 MIN)") + " · SETTLED";
+      badge.style.display = "inline-block";
+    } else if(!open){
+      badge.textContent = "BETS CLOSED"; badge.style.display = "inline-block";
+    } else badge.style.display = "none";
+  }
+  for(const p of PLAYERS){
+    const b = (state.b[id]||{})[p.key] || {};
+    const real = betOf(id, p.key);
+    for(const s of ["1","X","2"]){
+      const el = document.getElementById("s"+id+p.key+s);
+      if(!el) continue;
+      el.disabled = lock;
+      let cls = "side-pill";
+      if(b.s===s){
+        cls += " sel";
+        if(settled && real) cls += (state.s[id]===s ? " won" : " lost");
+      }
+      el.className = cls;
+    }
+    const kEl = document.getElementById("k"+id+p.key);
+    if(kEl){
+      kEl.disabled = lock;
+      if(!activeInputs.has("k"+id+p.key) && document.activeElement !== kEl){
+        kEl.value = b.k > 0 ? b.k : "";
+      }
+    }
+    const xEl = document.getElementById("x"+id+p.key);
+    if(xEl) xEl.style.display = (lock || (!b.s && !b.k)) ? "none" : "inline";
+    const nEl = document.getElementById("n"+id+p.key);
+    if(nEl && !keepNote){
+      const out = (led.outcome[id]||{})[p.key];
+      if(out && out.type==="won"){ nEl.textContent = "won "+moneySigned(out.amt); nEl.className = "b-note won"; }
+      else if(out && out.type==="lost"){ nEl.textContent = "lost \u2212$"+out.amt; nEl.className = "b-note lost"; }
+      else if(out && out.type==="burn"){ nEl.textContent = "no bet \u2212$"+out.amt; nEl.className = "b-note lost"; }
+      else if(out && out.type==="live"){ nEl.textContent = "riding $"+out.amt; nEl.className = "b-note"; }
+      else if(real){
+        nEl.textContent = "returns $"+Math.round(real.k * oddsOf(m, real.s) + 1e-9);
+        nEl.className = "b-note";
+      } else if(b.s && !(b.k>0)){ nEl.textContent = "add a stake (min $"+MIN_BET+")"; nEl.className = "b-note warn"; }
+      else if(!b.s && b.k>0){ nEl.textContent = "pick an outcome"; nEl.className = "b-note warn"; }
+      else {
+        const avail = led.free[p.key];
+        nEl.textContent = open ? (avail < MIN_BET ? (avail>0 ? "all-in only: $"+avail : "out of tokens this round") : "min $"+MIN_BET+" · max $"+avail) : "";
+        nEl.className = "b-note";
+      }
+    }
+  }
+  const setRow = document.getElementById("set"+id);
+  if(setRow){
+    setRow.style.display = adminMode ? "flex" : "none";
+    for(const s of ["1","X","2"]){
+      const el = document.getElementById("set"+id+s);
+      if(el) el.className = "side-pill" + (state.s[id]===s ? " sel" : "");
+    }
+  }
+}
+
+function renderBoard(){
+  const led = computeLedger();
+  const rows = PLAYERS.map(p=>({
+    name: p.name, key: p.key,
+    free: led.free[p.key], inplay: led.inplay[p.key],
+    pl: led.pl[p.key], rescues: led.rescues[p.key],
+    total: led.free[p.key] + led.inplay[p.key]
+  })).sort((x,y)=> y.total - x.total || y.pl - x.pl);
+  document.getElementById("boardBody").innerHTML = rows.map((r,i)=>
+    '<tr><td class="pos">'+(i+1)+'</td><td class="pname">'+r.name+'</td>'
+   +'<td class="num">'+money(r.free)+'</td><td class="num">'+money(r.inplay)+'</td>'
+   +'<td class="num hide-sm '+(r.pl<0?"neg":r.pl>0?"posv":"")+'">'+moneySigned(r.pl)+'</td>'
+   +'<td class="num">'+r.rescues+'</td><td class="num ptotal">'+money(r.total)+'</td></tr>'
+  ).join("");
+}
+
+function buildUI(){
+  const wrap = document.getElementById("markets");
+  const seq = [...MARKETS].sort((a,b)=>koTime(a)-koTime(b));
+  const rounds = [];
+  for(const m of seq){
+    let r = rounds.find(x=>x.rd===m.rd);
+    if(!r){ r = { rd:m.rd, ms:[] }; rounds.push(r); }
+    r.ms.push(m);
+  }
+  let html = "";
+  for(const round of rounds){
+    html += '<section><div class="sec-head"><h2>'+(ROUND_NAMES[round.rd]||round.rd)+'</h2>'
+         + '<span class="count">'+round.ms.length+' markets</span></div>'
+         + '<div class="rules-inline"><b>How it works:</b> back the <b>90-minute result</b> — home, draw or away; extra time and penalties don\'t count. <b>Min bet $50</b> on every game (all-in if you hold less); skip a game and <b>$50 burns</b>. Flat broke when the round ends and <b>everyone gets $200</b> — your rescue is counted.</div>';
+    let lastDate = "";
+    for(const m of round.ms){
+      if(m.d!==lastDate){ html += '<div class="date-label">'+m.d+'</div>'; lastDate = m.d; }
+      html += marketCard(m);
+    }
+    html += '</section>';
+  }
+  wrap.innerHTML = html;
+  for(const m of MARKETS) refreshMarket(m.id);
+  renderBoard();
+}
+
+/* ---------------- admin ---------------- */
+const adminBtn = document.getElementById("adminBtn");
+const pwWrap = document.getElementById("pwWrap");
+const pwBox = document.getElementById("pwBox");
+const pwErr = document.getElementById("pwErr");
+
+function setAdmin(on){
+  adminMode = on;
+  if(!on) adminPw = "";
+  adminBtn.textContent = "Settlement: " + (on ? "ON" : "off");
+  adminBtn.classList.toggle("on", on);
+  pwWrap.style.display = "none";
+  pwBox.value = ""; pwErr.textContent = "";
+  for(const m of MARKETS) refreshMarket(m.id);
+}
+adminBtn.addEventListener("click", function(){
+  if(adminMode){ setAdmin(false); return; }
+  const showing = pwWrap.style.display !== "none";
+  pwWrap.style.display = showing ? "none" : "inline-flex";
+  pwErr.textContent = "";
+  if(!showing) pwBox.focus();
+});
+async function tryUnlock(){
+  const pw = pwBox.value;
+  pwErr.textContent = "Checking…";
+  try{
+    const res = await fetch("/api/betting",{ method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ auth:true, pw:pw }) });
+    if(res.status===204){ adminPw = pw; setAdmin(true); }
+    else { pwErr.textContent = "Wrong password"; pwBox.select(); }
+  }catch(e){ pwErr.textContent = "Network error"; }
+}
+document.getElementById("pwGo").addEventListener("click", tryUnlock);
+pwBox.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+
+/* ---------------- exit flush ---------------- */
+function beacon(body){
+  if(navigator.sendBeacon){
+    navigator.sendBeacon("/api/betting", new Blob([body], {type:"application/json"}));
+  }else{
+    fetch("/api/betting",{ method:"POST", headers:{"Content-Type":"application/json"}, body:body, keepalive:true });
+  }
+}
+function flushOnExit(){
+  const updates = Object.values(pendingBets);
+  if(updates.length){
+    pendingBets = {};
+    beacon(JSON.stringify({ bets: updates, pw: adminPw }));
+  }
+  for(const s of Object.values(pendingSettles)){
+    beacon(JSON.stringify({ settle:{ id:s.id, side:s.side }, pw: adminPw }));
+  }
+}
+window.addEventListener("pagehide", flushOnExit);
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") flushOnExit(); });
+
+/* ---------------- boot ---------------- */
+(async function(){
+  try{
+    const leftovers = JSON.parse(localStorage.getItem(LS_KEY_B) || "{}");
+    for(const k in leftovers){
+      const u = leftovers[k];
+      if(u.v===null){ if(state.b[u.id]) delete state.b[u.id][u.pk]; }
+      else (state.b[u.id] ||= {})[u.pk] = u.v;
+      pendingBets[k] = u;
+    }
+  }catch(e){}
+  try{
+    const leftoversS = JSON.parse(localStorage.getItem(LS_KEY_S) || "{}");
+    for(const k in leftoversS){
+      const u = leftoversS[k];
+      if(u.side===null) delete state.s[u.id]; else state.s[u.id] = u.side;
+      pendingSettles[u.id] = u;
+    }
+  }catch(e){}
+
+  await loadState();
+  buildUI();
+
+  if(Object.keys(pendingBets).length) flushBets();
+  for(const id in pendingSettles) saveSettle(+id);
+})();
+</script>
+</body>
+</html>
