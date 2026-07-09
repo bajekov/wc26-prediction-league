@@ -32,9 +32,11 @@ export default async (req) => {
     // silently clobbers the other — which is why a cleared box reappears. Re-read,
     // re-apply the delta, and only commit if nothing changed since the read; retry otherwise.
     for (let attempt = 0; attempt < 6; attempt++) {
-      const { data: current, etag } =
-        await store.getWithMetadata("state", { type: "json" });
-      const data = current || { p: {}, r: {} };
+      // getWithMetadata returns null when the blob has never been written —
+      // guard it, or the very first save crashes with a 500 forever.
+      const meta = await store.getWithMetadata("state", { type: "json" });
+      const data = (meta && meta.data) || { p: {}, r: {} };
+      const etag = meta ? meta.etag : undefined;
 
       // prediction updates — rejected for any match whose result is already in
       if (Array.isArray(body.preds)) {
