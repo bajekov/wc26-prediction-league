@@ -30,9 +30,11 @@ export default async (req) => {
     // Single-blob state: re-read, re-apply the delta, commit only if the etag
     // hasn't moved; retry on conflict (same pattern as the prediction league).
     for (let attempt = 0; attempt < 6; attempt++) {
-      const { data: current, etag } =
-        await store.getWithMetadata("state", { type: "json" });
-      const data = current || { b: {}, s: {} };
+      // getWithMetadata returns null when the blob has never been written —
+      // guard it, or the very first save crashes with a 500 forever.
+      const meta = await store.getWithMetadata("state", { type: "json" });
+      const data = (meta && meta.data) || { b: {}, s: {} };
+      const etag = meta ? meta.etag : undefined;
 
       // bet upserts — rejected for any market already settled (unless admin)
       if (Array.isArray(body.bets)) {
