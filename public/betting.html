@@ -203,7 +203,9 @@ const MARKETS = [
  {id:97, rd:"QF", t1:"France",    t2:"Morocco",     p1:61, pX:23, p2:16, o1:1.65, oX:4.27, o2:6.25, d:"Thursday 9 July",  tm:"9:00pm",  v:"Gillette Stadium, Foxborough"},
  {id:98, rd:"QF", t1:"Spain",     t2:"Belgium",     p1:59, pX:23, p2:17, o1:1.69, oX:4.27, o2:5.75, d:"Friday 10 July",   tm:"8:00pm",  v:"SoFi Stadium, Inglewood"},
  {id:99, rd:"QF", t1:"Norway",    t2:"England",     p1:23, pX:25, p2:52, o1:4.44, oX:3.94, o2:1.92, d:"Saturday 11 July", tm:"10:00pm", v:"Hard Rock Stadium, Miami"},
- {id:100,rd:"QF", t1:"Argentina", t2:"Switzerland", p1:56, pX:26, p2:18, o1:1.78, oX:3.82, o2:5.65, d:"Sunday 12 July",   tm:"2:00am",  v:"Arrowhead Stadium, Kansas City"}
+ {id:100,rd:"QF", t1:"Argentina", t2:"Switzerland", p1:56, pX:26, p2:18, o1:1.78, oX:3.82, o2:5.65, d:"Sunday 12 July",   tm:"2:00am",  v:"Arrowhead Stadium, Kansas City"},
+ {id:101,rd:"SF", t1:"France",  t2:"Spain",     p1:41, pX:29, p2:30, o1:2.44, oX:3.41, o2:3.36, d:"Tuesday 14 July",   tm:"8:00pm", v:"AT&T Stadium, Arlington"},
+ {id:102,rd:"SF", t1:"England", t2:"Argentina", p1:38, pX:31, p2:31, o1:2.64, oX:3.25, o2:3.19, d:"Wednesday 15 July", tm:"8:00pm", v:"Mercedes-Benz Stadium, Atlanta"}
 ];
 const ROUND_NAMES = { QF:"Quarter-finals", SF:"Semi-finals", "3RD":"Third-Place Play-off", FIN:"Final" };
 const TLA = {"France":"FRA","Morocco":"MAR","Spain":"ESP","Belgium":"BEL","Norway":"NOR","England":"ENG","Argentina":"ARG","Switzerland":"SUI"};
@@ -261,7 +263,23 @@ const OVERVIEWS = {
   + sp(["Argentina","Prefers a 4-3-3 under Scaloni, controlled and clinical","Streetwise; find another gear when it matters"],
        ["Switzerland","Prefers a 4-2-3-1, organised and pragmatic","Concede little, waste less, fear nobody"])
   + hm("The champions against the tournament's great grinders. Switzerland have just proved they will happily go the distance, while Argentina needed late escapes against both Cape Verde and Egypt. Scaloni's side always find the moment — but if this is still level with twenty minutes left, Swiss nerve becomes a very real factor.")
-  + od(56,26,18,"Argentina","Switzerland")
+  + od(56,26,18,"Argentina","Switzerland"),
+ 101: fg(["France","Beat Morocco 2-0 — a Mbappé stunner and Dembélé's fifth","Six wins from six; the only side yet to need extra time"],
+         ["Spain","Merino struck late again to sink Belgium 2-1","First goal conceded all tournament; six straight wins"])
+  + pw(["France","Kylian Mbappé — eight goals, level with Messi for the Golden Boot","Ousmane Dembélé — five goals and endless menace from the right"],
+       ["Spain","Lamine Yamal — growing into the tournament after early injury","Mikel Merino — the super-sub who has settled two knockout ties"])
+  + sp(["France","Prefers a 4-3-3 with the world's best front line","Content without the ball, lethal in transition"],
+       ["Spain","Prefers a 4-3-3 with Rodri anchoring midfield","Positional dominance; controls the tempo of every game"])
+  + hm("The final everyone wanted, a round early: the tournament's most dominant attack against its most complete team. Spain will hoard the ball through Pedri and Rodri; France won't mind — Mbappé, Dembélé and Olise live on the counters that possession invites. Merino's late heroics have twice rescued a wasteful Spanish attack, and France punish waste. Knife-edge stuff.")
+  + od(41,29,30,"France","Spain"),
+ 102: fg(["England","Bellingham's double beat Norway 2-1 in extra time","Three straight knockout escapes; unbeaten but never comfortable"],
+         ["Argentina","Saw off ten-man Switzerland 3-1 after extra time","Álvarez's thunderbolt and Lautaro settled a second straight epic"])
+  + pw(["England","Jude Bellingham — four knockout goals, dragging England through","Harry Kane — the record scorer chasing his first trophy"],
+       ["Argentina","Lionel Messi — eight goals at 39, level with Mbappé","Julián Álvarez — scorer of the goal of the tournament"])
+  + sp(["England","Prefers a 4-2-3-1 under Tuchel","Pragmatic control, elite set-pieces; slow starts a habit"],
+       ["Argentina","Prefers a 4-3-3 under Scaloni, streetwise and clinical","The oldest squad left; savvy over legs, ruthless late"])
+  + hm("A rematch of 1986 and everything that comes with it. England keep falling behind and keep finding Bellingham; Argentina keep flirting with disaster and keep surviving — extra time in each of their last two. Tuchel's structure against Scaloni's know-how, with Kane against Messi as the backdrop. Whoever scores first finally gets a comfortable evening; neither has had one in weeks.")
+  + od(38,31,31,"England","Argentina")
 };
 
 /* ---------------- state & storage ---------------- */
