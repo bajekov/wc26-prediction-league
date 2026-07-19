@@ -365,8 +365,8 @@ const MATCHES = [
  {id:100,r:6,t1:"Argentina",t2:"Switzerland",d:"Sunday 12 July",tm:"2:00am",v:"Arrowhead Stadium, Kansas City"},
  {id:101,r:7,t1:"France",t2:"Spain",d:"Tuesday 14 July",tm:"8:00pm",v:"AT&T Stadium, Arlington"},
  {id:102,r:7,t1:"England",t2:"Argentina",d:"Wednesday 15 July",tm:"8:00pm",v:"Mercedes-Benz Stadium, Atlanta"},
- {id:103,r:8,t1:"L101",t2:"L102",d:"Saturday 18 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
- {id:104,r:8,t1:"W101",t2:"W102",d:"Sunday 19 July",tm:"8:00pm",v:"MetLife Stadium, New Jersey"}
+ {id:103,r:8,t1:"France",t2:"England",d:"Saturday 18 July",tm:"10:00pm",v:"Hard Rock Stadium, Miami"},
+ {id:104,r:8,t1:"Spain",t2:"Argentina",d:"Sunday 19 July",tm:"8:00pm",v:"MetLife Stadium, New Jersey"}
 ];
 
 function fg(a,b){
@@ -1203,7 +1203,23 @@ const OVERVIEWS = {
   + sp(["England","Prefers a 4-2-3-1 under Tuchel","Pragmatic control, elite set-pieces; slow starts a habit"],
        ["Argentina","Prefers a 4-3-3 under Scaloni, streetwise and clinical","The oldest squad left; savvy over legs, ruthless late"])
   + hm("A rematch of 1986 and everything that comes with it. England keep falling behind and keep finding Bellingham; Argentina keep flirting with disaster and keep surviving — extra time in each of their last two. Tuchel's structure against Scaloni's know-how, with Kane against Messi as the backdrop. Whoever scores first finally gets a comfortable evening; neither has had one in weeks.")
-  + od(38,31,31,"England","Argentina")
+  + od(38,31,31,"England","Argentina"),
+ 103: fg(["France","Toppled 2-0 by Spain in the semi-final — a first defeat of the tournament","The best attack in the competition, with pride and records to play for"],
+         ["England","Sunk by two Argentina goals in the final five minutes after leading","Gordon struck, then heartbreak; bronze the consolation on offer"])
+  + pw(["France","Kylian Mbappé — eight goals and the Golden Boot within reach","Ousmane Dembélé — five goals, licence to entertain"],
+       ["England","Harry Kane — captain, chasing goals and a proper send-off","Jude Bellingham — the tournament's outstanding Englishman"])
+  + sp(["France","Prefers a 4-3-3 — expect rotation and freedom","Transition football with nothing left to protect"],
+       ["England","Prefers a 4-2-3-1 — likely reshuffled","Set-piece strength; minds half on what might have been"])
+  + hm("Two wounded heavyweights with nothing to defend and everything to show off — the classic recipe for a third-place goal-fest. Both managers rotate, both sets of forwards play with total freedom, and neither defence has much left to give. History says these games entertain; this one delivered beyond all reason.")
+  + rs("France 4–6 England (FT)"),
+ 104: fg(["Spain","Beat France 2-0 — an Oyarzabal penalty and Porro's strike","Unbeaten, one goal conceded in seven games; a first final since 2010"],
+         ["Argentina","Broke England with two goals in the final five minutes","Enzo's screamer, then Lautaro's header; champions of the late show"])
+  + pw(["Spain","Lamine Yamal — 18 years old, drew the penalty that beat France","Unai Simón — six clean sheets in seven; the quiet foundation"],
+       ["Argentina","Lionel Messi — eight goals at 39, one game left in the story","Lautaro Martínez — the semi-final winner, ruthless in the big moments"])
+  + sp(["Spain","Prefers a 4-3-3 with Rodri anchoring midfield","Positional dominance; suffocating in possession"],
+       ["Argentina","Prefers a 4-3-3 under Scaloni, controlled and clinical","Streetwise; strongest in the final ten minutes"])
+  + hm("The European champions against the world champions — control against cunning. Spain have conceded once in seven games and will try to pass Argentina into submission; Argentina have scored decisive goals after the 85th minute in three straight knockout wins and believe no game is ever lost. Messi's last dance against Yamal's first final: football's past and its future, ninety minutes apart.")
+  + od(42,32,27,"Spain","Argentina")
 };
 
 /* ---------------- state & storage ---------------- */
